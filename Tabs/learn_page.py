@@ -1,4 +1,6 @@
 from lib.Vocabulary import get_random_vocab
+from PyQt6.QtGui import QKeyEvent
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QMainWindow,
     QWidget,
@@ -49,23 +51,27 @@ class Training(QMainWindow, QWidget):
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
 
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_Return:
+            self.check_input()
+            self.line_edit_translation.setFocus()
+
     def refresh(self):
         self.current_vocab = get_random_vocab()
         self.label_vocab.setText(self.current_vocab.vocab)
 
-    def check_input(self, inp: str):
-        if inp.lower() == self.current_vocab.german.lower():
-            if self.is_check:
+    def check_input(self):
+        inp = self.line_edit_translation.text()
+        if self.is_check:
+            if inp.lower() == self.current_vocab.german.lower():
                 self.refresh()
                 self.line_edit_translation.setText("")
-            else:
-                self.is_check = True
+        else:
+            self.is_check = True
 
     def show_solution(self):
         self.is_check = False
-        self.line_edit_translation.setText(
-            f"{self.current_vocab.vocab}: {self.current_vocab.german}"
-        )
+        self.line_edit_translation.setText(self.current_vocab.german)
 
     def help(self):
         input_help = self.line_edit_translation.text().lower()
