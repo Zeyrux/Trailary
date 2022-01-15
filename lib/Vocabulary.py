@@ -4,11 +4,9 @@ import random
 from pathlib import Path
 from dataclasses import dataclass, field
 
-
-DIR_VOCAB = "../Vocabs"
+DIR_VOCAB = "Vocabs"
 FILE_VOCAB = "vocabs.vocabulary"
 SEPARATOR = "#SEP#"
-
 vocabs = []
 
 
@@ -46,7 +44,7 @@ def read_vocab():
 def get_random_vocab() -> Vocab:
     if len(vocabs) == 0:
         return ""
-    return vocabs[random.randint(0, len(vocabs)-1)]
+    return vocabs[random.randint(0, len(vocabs) - 1)]
 
 
 read_vocab()

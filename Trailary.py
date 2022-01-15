@@ -6,10 +6,11 @@ from Tabs.add_vocabs_page import AddVocabs
 from Tabs.all_vocabs import AllVocabs
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeyEvent
-from PyQt6.QtWidgets import (QApplication,
-                             QMainWindow,
-                             QTabWidget,
-                             )
+from PyQt6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QTabWidget,
+)
 
 APP_NAME = "Trailary"
 STYLE = "Fusion"
@@ -18,7 +19,6 @@ SCREEN_HEIGHT = ctypes.windll.user32.GetSystemMetrics(1)
 
 
 class MainWindow(QMainWindow):
-
     is_fullscreen = False
 
     def __init__(self):
@@ -28,17 +28,17 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(800, 600)
 
         # trainer
-        widget_training = Training().widget
+        widget_training = Training()
 
         # add new vocabs
-        widget_new_vocabs = AddVocabs().widget
+        widget_new_vocabs = AddVocabs()
 
         # all vocabs
-        widget_all_vocabs = AllVocabs().widget
+        widget_all_vocabs = AllVocabs()
 
         # tabs
         self.tabs = QTabWidget()
-        self.tabs.setTabPosition(QTabWidget.TabPosition.West)
+        self.tabs.setTabPosition(QTabWidget.TabPosition.North)
         self.tabs.setMovable(True)
 
         self.tabs.addTab(widget_training, "learn")

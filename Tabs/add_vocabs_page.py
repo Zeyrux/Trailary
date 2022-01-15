@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import (
+    QMainWindow,
     QWidget,
     QVBoxLayout,
     QLineEdit,
@@ -7,9 +8,10 @@ from PyQt6.QtWidgets import (
 )
 
 
-class AddVocabs(QWidget):
+class AddVocabs(QMainWindow):
     def __init__(self):
         super().__init__()
+
         self.layout = QVBoxLayout()
         self.layout.addWidget(QLabel("English:"))
         self.layout.addWidget(QLineEdit())
@@ -19,3 +21,5 @@ class AddVocabs(QWidget):
 
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
+
+        self.setCentralWidget(self.widget)
