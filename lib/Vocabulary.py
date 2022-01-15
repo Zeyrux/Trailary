@@ -12,21 +12,21 @@ vocabs = []
 
 @dataclass(frozen=True, order=True)
 class Vocab:
-    vocab: str
-    german: str = field(compare=False)
+    eng: str
+    ger: str = field(compare=False)
 
     def __len__(self):
         return len(self.vocab)
 
 
-def save_vocab(vocabs: list):
+def save_vocab(vocabs: list[Vocab]):
     if not os.path.isdir(DIR_VOCAB):
         Path(DIR_VOCAB).mkdir(parents=True, exist_ok=True)
     with open(os.path.join(DIR_VOCAB, FILE_VOCAB), "a") as f:
         for vocab in vocabs:
-            f.write(vocab.vocab)
+            f.write(vocab.eng)
             f.write(SEPARATOR)
-            f.write(vocab.german)
+            f.write(vocab.ger)
             f.write("\n")
 
 

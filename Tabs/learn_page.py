@@ -14,10 +14,17 @@ from PyQt6.QtWidgets import (
 
 class Training(QMainWindow, QWidget):
     is_check = True
-    current_vocab = get_random_vocab()
 
-    def __init__(self):
+    def __init__(self, eng_to_ger: bool):
         super().__init__()
+        self.eng_to_ger = eng_to_ger
+
+        self.cur_vocab = get_random_vocab()
+        self.vocab_search \
+            = self.cur_vocab.ger if eng_to_ger else self.cur_vocab.eng
+        self.vocab_given \
+            = self.cur_vocab.eng if eng_to_ger else self.cur_vocab.ger
+
         # buttons bottom
         self.button_help = QPushButton("Help")
         self.button_help.clicked.connect(self.help)
@@ -37,7 +44,7 @@ class Training(QMainWindow, QWidget):
         self.widget_buttons.setLayout(self.layout_buttons)
 
         # tab
-        self.label_vocab = QLabel(self.current_vocab.vocab)
+        self.label_vocab = QLabel(self.vocab_given)
 
         self.line_edit_translation = QLineEdit()
         self.line_edit_translation.textChanged.connect(self.check_input)
@@ -51,19 +58,24 @@ class Training(QMainWindow, QWidget):
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
 
-    def keyPressEvent(self, event: QKeyEvent) -> None:
+    def keyReleaseEvent(self, event: QKeyEvent) -> None:
         if event.key() == Qt.Key.Key_Return:
             self.check_input()
             self.line_edit_translation.setFocus()
 
     def refresh(self):
-        self.current_vocab = get_random_vocab()
-        self.label_vocab.setText(self.current_vocab.vocab)
+        self.cur_vocab = get_random_vocab()
+        self.vocab_search \
+            = self.cur_vocab.ger if self.eng_to_ger else self.cur_vocab.eng
+        self.vocab_given \
+            = self.cur_vocab.eng if self.eng_to_ger else self.cur_vocab.ger
+        self.label_vocab.setText(self.vocab_given)
+        self.line_edit_translation.setText("")
 
     def check_input(self):
         inp = self.line_edit_translation.text()
         if self.is_check:
-            if inp.lower() == self.current_vocab.german.lower():
+            if inp.lower() == self.vocab_search.lower():
                 self.refresh()
                 self.line_edit_translation.setText("")
         else:
@@ -71,17 +83,25 @@ class Training(QMainWindow, QWidget):
 
     def show_solution(self):
         self.is_check = False
-        self.line_edit_translation.setText(self.current_vocab.german)
+        self.line_edit_translation.setText(self.vocab_search)
 
     def help(self):
         input_help = self.line_edit_translation.text().lower()
-        vocab = self.current_vocab.german.lower()
+        if self.vocab_search.lower() == input_help:
+            return
+        vocab = self.vocab_search.lower()
+        ori = self.line_edit_translation.text()
+        new_text = ""
         index = 0
         for letter_vocab, letter_input in zip(vocab, input_help):
             if letter_vocab != letter_input:
                 self.is_check = False
-                ori = self.line_edit_translation.text()
                 new_text = ori[: index] + letter_vocab + ori[index + 1:]
                 self.line_edit_translation.setText(new_text)
                 return
             index += 1
+        if new_text == "":
+            self.is_check = False
+            self.line_edit_translation.setText(
+                ori + self.vocab_search[len(ori)]
+            )

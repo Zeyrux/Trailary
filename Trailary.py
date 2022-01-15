@@ -27,8 +27,11 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(APP_NAME)
         self.setMinimumSize(800, 600)
 
-        # trainer
-        widget_training = Training()
+        # trainer ger to eng
+        widget_training_ger_to_eng = Training(eng_to_ger=True)
+
+        # trainer ger to eng
+        widget_training_eng_to_ger = Training(eng_to_ger=False)
 
         # add new vocabs
         widget_new_vocabs = AddVocabs()
@@ -41,13 +44,14 @@ class MainWindow(QMainWindow):
         self.tabs.setTabPosition(QTabWidget.TabPosition.North)
         self.tabs.setMovable(True)
 
-        self.tabs.addTab(widget_training, "learn")
+        self.tabs.addTab(widget_training_ger_to_eng, "ger to eng")
+        self.tabs.addTab(widget_training_eng_to_ger, "eng to ger")
         self.tabs.addTab(widget_new_vocabs, "add vocabs")
         self.tabs.addTab(widget_all_vocabs, "all vocabs")
 
         self.setCentralWidget(self.tabs)
 
-    def keyPressEvent(self, event: QKeyEvent) -> None:
+    def keyReleaseEvent(self, event: QKeyEvent) -> None:
         if event.key() == Qt.Key.Key_F11:
             self.toggle_fullscreen()
 
