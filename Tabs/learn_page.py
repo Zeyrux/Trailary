@@ -1,4 +1,4 @@
-from Vocabulary import get_random_vocab
+from lib.Vocabulary import get_random_vocab
 from PyQt6.QtWidgets import (
     QWidget,
     QVBoxLayout,

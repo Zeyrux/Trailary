@@ -1,23 +1,15 @@
-import os
 import sys
 import ctypes
 
-from learn_page import Training
-from add_vocabs_page import AddVocabs
-from all_vocabs import AllVocabs
-from Vocabulary import Vocab, read_vocab, save_vocab, get_random_vocab
+from Tabs.learn_page import Training
+from Tabs.add_vocabs_page import AddVocabs
+from Tabs.all_vocabs import AllVocabs
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import (QApplication,
                              QMainWindow,
-                             QPushButton,
-                             QLineEdit,
-                             QHBoxLayout,
-                             QVBoxLayout,
-                             QWidget,
-                             QLabel,
                              QTabWidget,
-                             QListWidget,)
+                             )
 
 APP_NAME = "Trailary"
 STYLE = "Fusion"

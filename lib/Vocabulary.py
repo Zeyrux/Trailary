@@ -5,7 +5,7 @@ from pathlib import Path
 from dataclasses import dataclass, field
 
 
-DIR_VOCAB = "Vocabs"
+DIR_VOCAB = "../Vocabs"
 FILE_VOCAB = "vocabs.vocabulary"
 SEPARATOR = "#SEP#"
 
