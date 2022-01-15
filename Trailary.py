@@ -1,8 +1,13 @@
 import os
 import sys
+import ctypes
 
-from Vocabulary import Vocab, read_vocab, save_vocab
-from PyQt6.QtCore import QSize, Qt
+from learn_page import Training
+from add_vocabs_page import AddVocabs
+from all_vocabs import AllVocabs
+from Vocabulary import Vocab, read_vocab, save_vocab, get_random_vocab
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import (QApplication,
                              QMainWindow,
                              QPushButton,
@@ -15,56 +20,56 @@ from PyQt6.QtWidgets import (QApplication,
                              QListWidget,)
 
 APP_NAME = "Trailary"
+STYLE = "Fusion"
+SCREEN_WIDTH = ctypes.windll.user32.GetSystemMetrics(0)
+SCREEN_HEIGHT = ctypes.windll.user32.GetSystemMetrics(1)
 
 
 class MainWindow(QMainWindow):
+
+    is_fullscreen = False
+
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle(APP_NAME)
-        self.setFixedSize(QSize(800, 600))
+        self.setMinimumSize(800, 600)
 
         # trainer
-        layout_trainer = QVBoxLayout()
-        layout_trainer.addWidget(QLabel("Text"))
-        layout_trainer.addWidget(QLineEdit())
-
-        widget_trainer = QWidget()
-        widget_trainer.setLayout(layout_trainer)
+        widget_training = Training().widget
 
         # add new vocabs
-        layout_new_vocabs = QVBoxLayout()
-        layout_new_vocabs.addWidget(QLabel("English:"))
-        layout_new_vocabs.addWidget(QLineEdit())
-        layout_new_vocabs.addWidget(QLabel("German:"))
-        layout_new_vocabs.addWidget(QLineEdit())
-        layout_new_vocabs.addWidget(QPushButton("Save"))
-
-        widget_new_vocabs = QWidget()
-        widget_new_vocabs.setLayout(layout_new_vocabs)
+        widget_new_vocabs = AddVocabs().widget
 
         # all vocabs
-        widget_all_vocabs = QListWidget()
-        widget_all_vocabs.addItem("Vocab1: German")
-        widget_all_vocabs.addItem("Vocab2: German")
-        widget_all_vocabs.addItem("Vocab3: German")
-        widget_all_vocabs.addItem("Vocab4: German")
-        widget_all_vocabs.addItem("Vocab5: German")
+        widget_all_vocabs = AllVocabs().widget
 
         # tabs
-        tabs = QTabWidget()
-        tabs.setTabPosition(QTabWidget.TabPosition.West)
-        tabs.setMovable(True)
+        self.tabs = QTabWidget()
+        self.tabs.setTabPosition(QTabWidget.TabPosition.West)
+        self.tabs.setMovable(True)
 
-        tabs.addTab(widget_trainer, "learn")
-        tabs.addTab(widget_new_vocabs, "add vocabs")
-        tabs.addTab(widget_all_vocabs, "all vocabs")
+        self.tabs.addTab(widget_training, "learn")
+        self.tabs.addTab(widget_new_vocabs, "add vocabs")
+        self.tabs.addTab(widget_all_vocabs, "all vocabs")
 
-        self.setCentralWidget(tabs)
+        self.setCentralWidget(self.tabs)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_F11:
+            self.toggle_fullscreen()
+
+    def toggle_fullscreen(self):
+        if self.is_fullscreen:
+            self.showNormal()
+            self.is_fullscreen = False
+        else:
+            self.showFullScreen()
+            self.is_fullscreen = True
 
 
 app = QApplication(sys.argv)
-app.setStyle("Fusion")
+app.setStyle(STYLE)
 
 window = MainWindow()
 window.show()

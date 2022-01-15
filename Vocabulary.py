@@ -44,7 +44,9 @@ def read_vocab():
 
 
 def get_random_vocab() -> Vocab:
-    return vocabs[random.randint(0, len(vocabs))]
+    if len(vocabs) == 0:
+        return ""
+    return vocabs[random.randint(0, len(vocabs)-1)]
 
 
 read_vocab()
