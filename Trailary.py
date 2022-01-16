@@ -28,10 +28,10 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(800, 600)
 
         # trainer ger to eng
-        widget_training_ger_to_eng = Training(eng_to_ger=True)
+        widget_training_ger_to_eng = Training()
 
         # trainer ger to eng
-        widget_training_eng_to_ger = Training(eng_to_ger=False)
+        widget_training_eng_to_ger = Training()
 
         # add new vocabs
         widget_new_vocabs = AddVocabs()

@@ -15,15 +15,10 @@ from PyQt6.QtWidgets import (
 class Training(QMainWindow, QWidget):
     is_check = True
 
-    def __init__(self, eng_to_ger: bool):
+    def __init__(self):
         super().__init__()
-        self.eng_to_ger = eng_to_ger
 
         self.cur_vocab = get_random_vocab()
-        self.vocab_search \
-            = self.cur_vocab.ger if eng_to_ger else self.cur_vocab.eng
-        self.vocab_given \
-            = self.cur_vocab.eng if eng_to_ger else self.cur_vocab.ger
 
         # buttons bottom
         self.button_help = QPushButton("Help")
@@ -44,7 +39,7 @@ class Training(QMainWindow, QWidget):
         self.widget_buttons.setLayout(self.layout_buttons)
 
         # tab
-        self.label_vocab = QLabel(self.vocab_given)
+        self.label_vocab = QLabel(str(self.cur_vocab.given))
 
         self.input_translation = QLineEdit()
         self.input_translation.textChanged.connect(self.check_input)
@@ -65,17 +60,13 @@ class Training(QMainWindow, QWidget):
 
     def refresh(self):
         self.cur_vocab = get_random_vocab()
-        self.vocab_search \
-            = self.cur_vocab.ger if self.eng_to_ger else self.cur_vocab.eng
-        self.vocab_given \
-            = self.cur_vocab.eng if self.eng_to_ger else self.cur_vocab.ger
-        self.label_vocab.setText(self.vocab_given)
+        self.label_vocab.setText(str(self.cur_vocab.given))
         self.input_translation.setText("")
 
     def check_input(self):
         inp = self.input_translation.text()
         if self.is_check:
-            if inp.lower() == self.vocab_search.lower():
+            if inp.lower() in self.cur_vocab.searched:
                 self.refresh()
                 self.input_translation.setText("")
         else:
@@ -83,25 +74,28 @@ class Training(QMainWindow, QWidget):
 
     def show_solution(self):
         self.is_check = False
-        self.input_translation.setText(self.vocab_search)
+        self.input_translation.setText(str(self.cur_vocab.searched))
 
     def help(self):
         input_help = self.input_translation.text().lower()
-        if self.vocab_search.lower() == input_help:
+        if input_help in self.cur_vocab.searched:
             return
-        vocab = self.vocab_search.lower()
-        ori = self.input_translation.text()
-        new_text = ""
-        index = 0
-        for letter_vocab, letter_input in zip(vocab, input_help):
-            if letter_vocab != letter_input:
-                self.is_check = False
-                new_text = ori[: index] + letter_vocab + ori[index + 1:]
-                self.input_translation.setText(new_text)
-                return
-            index += 1
-        if new_text == "":
-            self.is_check = False
-            self.input_translation.setText(
-                ori + self.vocab_search[len(ori)]
-            )
+
+
+
+        # vocab = self.cur_vocab.searched.lower()
+        # ori = self.input_translation.text()
+        # new_text = ""
+        # index = 0
+        # for letter_vocab, letter_input in zip(vocab, input_help):
+        #     if letter_vocab != letter_input:
+        #         self.is_check = False
+        #         new_text = ori[: index] + letter_vocab + ori[index + 1:]
+        #         self.input_translation.setText(new_text)
+        #         return
+        #     index += 1
+        # if new_text == "":
+        #     self.is_check = False
+        #     self.input_translation.setText(
+        #         ori + self.cur_vocab.searched[len(ori)]
+        #     )
