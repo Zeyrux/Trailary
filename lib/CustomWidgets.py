@@ -10,11 +10,13 @@ class CustomLineEdit(QLineEdit):
     def __init__(
             self,
             key_press=empty,
-            key_release=empty
+            key_release=empty,
+            placeholder=""
     ):
         super().__init__()
         self.key_press = key_press
         self.key_release = key_release
+        self.setPlaceholderText(placeholder)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
         super().keyPressEvent(event)

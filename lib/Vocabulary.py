@@ -46,7 +46,8 @@ def read_vocab():
             line = f.readline().replace("\n", "")
             if line == "":
                 return
-            len_given, given, len_searched, searched = line.split(SEPARATOR)
+            len_given, given, len_searched, searched \
+                = line.split(SEPARATOR)
             vocab = Vocab(
                 len_given,
                 given.split(ALTERNATIVE),

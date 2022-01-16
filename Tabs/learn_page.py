@@ -80,8 +80,9 @@ class Training(QMainWindow, QWidget):
         input_help = self.input_translation.text().lower()
         if input_help in self.cur_vocab.searched:
             return
-
-
+        for search in self.cur_vocab.searched:
+            for letter_1, letter_2 in zip(input_help, search):
+                pass
 
         # vocab = self.cur_vocab.searched.lower()
         # ori = self.input_translation.text()
