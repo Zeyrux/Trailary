@@ -1,7 +1,7 @@
 import sys
 import ctypes
 
-from Tabs.learn_page import Training
+from Tabs.learn_page import Training, get_tabs
 from Tabs.add_vocabs_page import AddVocabs
 from Tabs.all_vocabs import AllVocabs
 from PyQt6.QtCore import Qt
@@ -27,12 +27,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(APP_NAME)
         self.setMinimumSize(800, 600)
 
-        # trainer ger to eng
-        widget_training_ger_to_eng = Training()
-
-        # trainer ger to eng
-        widget_training_eng_to_ger = Training()
-
         # add new vocabs
         widget_new_vocabs = AddVocabs()
 
@@ -44,8 +38,14 @@ class MainWindow(QMainWindow):
         self.tabs.setTabPosition(QTabWidget.TabPosition.North)
         self.tabs.setMovable(True)
 
-        self.tabs.addTab(widget_training_ger_to_eng, "ger to eng")
-        self.tabs.addTab(widget_training_eng_to_ger, "eng to ger")
+        learn_tabs = get_tabs()
+
+        for tab in learn_tabs:
+            self.tabs.addTab(
+                tab,
+                f"{tab.language_given} to {tab.language_search}"
+            )
+
         self.tabs.addTab(widget_new_vocabs, "add vocabs")
         self.tabs.addTab(widget_all_vocabs, "all vocabs")
 

@@ -1,4 +1,4 @@
-from lib.Vocabulary import get_random_vocab
+from lib.Vocabulary import get_random_vocab, get_languages
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -12,13 +12,28 @@ from PyQt6.QtWidgets import (
 )
 
 
+def get_tabs() -> list["Training"]:
+    languages = get_languages()
+    tabs = []
+    for i, language_given in enumerate(languages):
+        for j in range(i + 1, len(languages)):
+            tabs.append(Training(language_given, languages[j]))
+            tabs.append(Training(languages[j], language_given))
+    return tabs
+
+
 class Training(QMainWindow, QWidget):
     is_check = True
 
-    def __init__(self):
+    def __init__(self, language_given, language_search):
         super().__init__()
+        self.language_given = language_given
+        self.language_search = language_search
 
-        self.cur_vocab = get_random_vocab()
+        self.cur_vocab = get_random_vocab(
+            language_given=self.language_given,
+            language_search=self.language_search
+        )
 
         # buttons bottom
         self.button_help = QPushButton("Help")
@@ -59,7 +74,10 @@ class Training(QMainWindow, QWidget):
             self.input_translation.setFocus()
 
     def refresh(self):
-        self.cur_vocab = get_random_vocab()
+        self.cur_vocab = get_random_vocab(
+            language_given=self.language_given,
+            language_search=self.language_search
+        )
         self.label_vocab.setText(str(self.cur_vocab.given))
         self.input_translation.setText("")
 
@@ -77,12 +95,22 @@ class Training(QMainWindow, QWidget):
         self.input_translation.setText(str(self.cur_vocab.searched))
 
     def help(self):
-        input_help = self.input_translation.text().lower()
-        if input_help in self.cur_vocab.searched:
+        ori = self.input_translation.text()
+        if ori in self.cur_vocab.searched:
             return
-        for search in self.cur_vocab.searched:
-            for letter_1, letter_2 in zip(input_help, search):
-                pass
+        # self.is_check = False
+        # index = 0
+        # for search in self.cur_vocab.searched:
+        #     for letter_1, letter_2 in zip(ori.lower(), search):
+        #         if letter_1 != letter_2:
+        #             self.input_translation.setText(
+        #                 ori[: index] + letter_2 + ori[index + 1:]
+        #             )
+        #             return
+        #         index += 1
+        # self.input_translation.setText(
+        #     ori + self.cur_vocab.searched[len(ori)]
+        # )
 
         # vocab = self.cur_vocab.searched.lower()
         # ori = self.input_translation.text()

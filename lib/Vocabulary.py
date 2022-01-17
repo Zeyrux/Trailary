@@ -11,12 +11,20 @@ ALTERNATIVE = "#ALT#"
 vocabs = []
 
 
-@dataclass(frozen=True, order=True)
+@dataclass(order=True)
 class Vocab:
     lan_given: str
     given: list[str]
     lan_searched: str
     searched: list[str]
+
+    def switch_lan(self):
+        help_lan = self.lan_searched
+        help_vocab = self.searched
+        self.lan_searched = self.lan_given
+        self.searched = self.given
+        self.lan_given = help_lan
+        self.given = help_vocab
 
 
 def save_vocab(vocabs: list[Vocab]):
@@ -57,10 +65,29 @@ def read_vocab():
             vocabs.append(vocab)
 
 
-def get_random_vocab() -> Vocab:
+def get_random_vocab(language_given="", language_search="") -> Vocab:
     if len(vocabs) == 0:
         return ""
-    return vocabs[random.randint(0, len(vocabs) - 1)]
+    while True:
+        vocab = vocabs[random.randint(0, len(vocabs) - 1)]
+        if language_given == vocab.lan_given \
+                or vocab.lan_searched \
+                and language_search == vocab.lan_given \
+                or vocab.lan_searched:
+            if language_given != vocab.lan_given:
+                vocab.switch_lan()
+            break
+    return vocab
+
+
+def get_languages() -> list[str]:
+    languages = []
+    for vocab in vocabs:
+        if vocab.lan_given not in languages:
+            languages.append(vocab.lan_given)
+        if vocab.lan_searched not in languages:
+            languages.append(vocab.lan_searched)
+    return languages
 
 
 read_vocab()
