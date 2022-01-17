@@ -1,4 +1,5 @@
 from lib.Vocabulary import get_random_vocab, get_languages
+from lib.keyboard import Keyboard
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -27,6 +28,9 @@ class Training(QMainWindow, QWidget):
 
     def __init__(self, language_given, language_search):
         super().__init__()
+
+        self.keyboard = Keyboard([Qt.Key.Key_Control])
+
         self.language_given = language_given
         self.language_search = language_search
 
@@ -68,10 +72,27 @@ class Training(QMainWindow, QWidget):
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
 
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        self.keyboard.key_press(event)
+
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
+        self.keyboard.key_release(event)
+        # focus
         if event.key() == Qt.Key.Key_Return:
             self.check_input()
             self.input_translation.setFocus()
+        # help shortcut
+        if event.key(Qt.Key.Key_H) \
+                and self.keyboard.key(Qt.Key.Key_Control):
+            self.button_help.click()
+        # solution shortcut
+        if event.key(Qt.Key.Key_S) \
+                and self.keyboard.key(Qt.Key.Key_Control):
+            self.button_solution.click()
+        # refresh shortcut
+        if event.key(Qt.Key.Key_R) \
+                and self.keyboard.key(Qt.Key.Key_Control):
+            self.button_refresh.click()
 
     def refresh(self):
         self.cur_vocab = get_random_vocab(

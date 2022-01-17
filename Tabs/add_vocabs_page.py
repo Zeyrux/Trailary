@@ -1,5 +1,6 @@
 from lib.Vocabulary import Vocab, save_vocab
 from lib.CustomWidgets import CustomLineEdit
+from lib.keyboard import Keyboard
 from PyQt6.QtGui import QKeyEvent, QMouseEvent
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -17,6 +18,8 @@ class AddVocabs(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.keyboard = Keyboard([Qt.Key.Key_Control])
+
         # button
         self.button_save = QPushButton("Save")
         self.button_save.clicked.connect(self.save)
@@ -24,18 +27,22 @@ class AddVocabs(QMainWindow):
         # inputs
         self.input_first_len = CustomLineEdit(
             key_release=self.key_release,
+            key_press=self.key_press,
             placeholder="First Language"
         )
         self.input_first = CustomLineEdit(
             key_release=self.key_release,
+            key_press=self.key_press,
             placeholder="First Word"
         )
         self.input_second_len = CustomLineEdit(
             key_release=self.key_release,
+            key_press=self.key_press,
             placeholder="Second Language"
         )
         self.input_second = CustomLineEdit(
             key_release=self.key_release,
+            key_press=self.key_press,
             placeholder="Second Word"
         )
 
@@ -64,6 +71,16 @@ class AddVocabs(QMainWindow):
         self.widget.setLayout(self.layout)
 
         self.setCentralWidget(self.widget)
+
+    def mouseReleaseEvent(self, event: QMouseEvent) -> None:
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.remove_focus_button()
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        self.keyboard.key_press(event)
+
+    def keyReleaseEvent(self, event: QKeyEvent) -> None:
+        self.keyboard.key_release(event)
 
     def check(self) -> bool:
         if self.input_first.text() == "" \
@@ -96,10 +113,6 @@ class AddVocabs(QMainWindow):
         self.input_second_len.clear()
         self.input_second.clear()
 
-    def mouseReleaseEvent(self, event: QMouseEvent) -> None:
-        if event.button() == Qt.MouseButton.LeftButton:
-            self.remove_focus_button()
-
     def focus_button(self):
         if not self.is_button_focus:
             self.button_save.setStyleSheet("background-color: #99CCFF")
@@ -111,7 +124,11 @@ class AddVocabs(QMainWindow):
         self.button_save.setStyleSheet("background-color: #FFFFFF")
         self.is_button_focus = False
 
+    def key_press(self, event: QKeyEvent):
+        self.keyboard.key_press(event)
+
     def key_release(self, event: QKeyEvent):
+        self.keyboard.key_release(event)
         # get current focus
         for i in range(len(self.steer_widgets) - 1):
             if self.steer_widgets[i].hasFocus():
@@ -130,3 +147,7 @@ class AddVocabs(QMainWindow):
                 self.focus_button()
             else:
                 self.steer_widgets[selected + 1].setFocus()
+        # shortcuts
+        if event.key() == Qt.Key.Key_S \
+                and self.keyboard.key(Qt.Key.Key_Control):
+            self.button_save.click()
