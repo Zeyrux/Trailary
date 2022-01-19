@@ -1,5 +1,6 @@
 from lib.Vocabulary import get_random_vocab, get_languages
 from lib.keyboard import Keyboard
+from lib.CustomWidgets import CustomLineEdit
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -8,7 +9,6 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
-    QLineEdit,
     QPushButton
 )
 
@@ -60,7 +60,11 @@ class Training(QMainWindow, QWidget):
         # tab
         self.label_vocab = QLabel(str(self.cur_vocab.given))
 
-        self.input_translation = QLineEdit()
+        self.input_translation = CustomLineEdit(
+            key_press=self.key_press,
+            key_release=self.key_release,
+            placeholder="Translation"
+        )
         self.input_translation.textChanged.connect(self.check_input)
 
         self.layout = QVBoxLayout()
@@ -72,25 +76,27 @@ class Training(QMainWindow, QWidget):
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
 
-    def keyPressEvent(self, event: QKeyEvent) -> None:
-        self.keyboard.key_press(event)
-
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
-        self.keyboard.key_release(event)
         # focus
         if event.key() == Qt.Key.Key_Return:
             self.check_input()
             self.input_translation.setFocus()
+
+    def key_press(self, event: QKeyEvent):
+        self.keyboard.key_press(event)
+
+    def key_release(self, event: QKeyEvent):
+        self.keyboard.key_release(event)
         # help shortcut
-        if event.key(Qt.Key.Key_H) \
+        if event.key() == Qt.Key.Key_H \
                 and self.keyboard.key(Qt.Key.Key_Control):
             self.button_help.click()
         # solution shortcut
-        if event.key(Qt.Key.Key_S) \
+        if event.key() == Qt.Key.Key_S \
                 and self.keyboard.key(Qt.Key.Key_Control):
             self.button_solution.click()
         # refresh shortcut
-        if event.key(Qt.Key.Key_R) \
+        if event.key() == Qt.Key.Key_R \
                 and self.keyboard.key(Qt.Key.Key_Control):
             self.button_refresh.click()
 

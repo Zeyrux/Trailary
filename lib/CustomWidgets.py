@@ -21,6 +21,7 @@ class CustomLineEdit(QLineEdit):
     def keyPressEvent(self, event: QKeyEvent) -> None:
         super().keyPressEvent(event)
         self.key_press(event)
+
         event.accept()
 
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
