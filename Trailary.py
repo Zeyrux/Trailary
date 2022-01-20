@@ -42,7 +42,7 @@ class MainWindow(QMainWindow):
 
         for tab in learn_tabs:
             self.tabs.addTab(
-                tab,
+                tab.widget,
                 f"{tab.language_given} to {tab.language_search}"
             )
 

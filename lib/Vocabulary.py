@@ -90,4 +90,13 @@ def get_languages() -> list[str]:
     return languages
 
 
+def remove_list(string: str) -> str:
+    string = string.replace("[", "")
+    string = string.replace("]", "")
+    string = string.replace("\"", "")
+    string = string.replace("'", "")
+    return string
+
+
 read_vocab()
+vocabs.sort()

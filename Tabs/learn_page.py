@@ -23,7 +23,7 @@ def get_tabs() -> list["Training"]:
     return tabs
 
 
-class Training(QMainWindow, QWidget):
+class Training(QMainWindow):
     is_check = True
 
     def __init__(self, language_given, language_search):
@@ -71,7 +71,6 @@ class Training(QMainWindow, QWidget):
         self.layout.addWidget(self.label_vocab)
         self.layout.addWidget(self.input_translation)
         self.layout.addWidget(self.widget_buttons)
-
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
