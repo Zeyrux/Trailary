@@ -13,6 +13,9 @@ from PyQt6.QtWidgets import (
 )
 
 
+STYLE = open("styles\\learn_tab.qss", "r").read()
+
+
 def get_tabs() -> list["Training"]:
     languages = get_languages()
     tabs = []
@@ -71,8 +74,11 @@ class Training(QMainWindow):
         self.layout.addWidget(self.label_vocab)
         self.layout.addWidget(self.input_translation)
         self.layout.addWidget(self.widget_buttons)
+
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
+        self.widget.setStyleSheet(STYLE)
+
         self.setCentralWidget(self.widget)
 
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
