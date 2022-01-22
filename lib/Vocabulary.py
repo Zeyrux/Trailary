@@ -2,21 +2,42 @@ import os
 import random
 
 from pathlib import Path
-from dataclasses import dataclass
 
 DIR_VOCAB = "Vocabs"
 FILE_VOCAB = "vocabs.vocabulary"
 SEPARATOR = "#SEP#"
 ALTERNATIVE = "#ALT#"
-vocabs = []
+
+vocabs: list["Vocab"] = None
 
 
-@dataclass(order=True)
 class Vocab:
-    lan_given: str
-    given: list[str]
-    lan_searched: str
-    searched: list[str]
+    def __init__(
+            self,
+            lan_given: str,
+            given: list[str],
+            lan_searched: str,
+            searched: list[str]
+    ):
+        self.lan_given = lan_given
+        self.given = given
+        self.lan_searched = lan_searched
+        self.searched = searched
+
+    def __lt__(self, other: "Vocab"):
+        if self.lan_given == other.lan_given:
+            if self.lan_searched == other.lan_searched:
+                if self.given == other.given:
+                    return self.searched < other.searched
+                return self.given < other.given
+            return self.lan_searched < other.lan_searched
+        return self.lan_given < other.lan_searched
+
+    def __str__(self):
+        return f"lan_given: {self.lan_given}; " \
+               f"given: {self.given}; " \
+               f"lan_searched: {self.lan_searched}; " \
+               f"searched: {self.searched}"
 
     def switch_lan(self):
         help_lan = self.lan_searched
@@ -47,13 +68,14 @@ def save_vocab(vocabs: list[Vocab]):
 
 
 def read_vocab():
+    vocabs = []
     if not os.path.isfile(os.path.join(DIR_VOCAB, FILE_VOCAB)):
         return
     with open(os.path.join(DIR_VOCAB, FILE_VOCAB), "r") as f:
         while True:
             line = f.readline().replace("\n", "")
             if line == "":
-                return
+                return vocabs
             len_given, given, len_searched, searched \
                 = line.split(SEPARATOR)
             vocab = Vocab(
@@ -98,5 +120,10 @@ def remove_list(string: str) -> str:
     return string
 
 
-read_vocab()
-vocabs.sort()
+def reload():
+    global vocabs
+    vocabs = read_vocab()
+    vocabs.sort()
+
+
+reload()

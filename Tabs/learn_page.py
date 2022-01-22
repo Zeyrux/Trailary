@@ -1,4 +1,4 @@
-from lib.Vocabulary import get_random_vocab, get_languages
+from lib.Vocabulary import get_random_vocab, get_languages, remove_list
 from lib.keyboard import Keyboard
 from lib.CustomWidgets import CustomLineEdit
 from PyQt6.QtGui import QKeyEvent
@@ -124,7 +124,9 @@ class Training(QMainWindow):
 
     def show_solution(self):
         self.is_check = False
-        self.input_translation.setText(str(self.cur_vocab.searched))
+        self.input_translation.setText(remove_list(
+            str(self.cur_vocab.searched)
+        ))
 
     def help(self):
         ori = self.input_translation.text()
