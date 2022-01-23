@@ -1,3 +1,7 @@
+* {
+  font-size: 40px;
+}
+
 QPushButton {
   background-color: blue;
 }

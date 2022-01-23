@@ -91,7 +91,13 @@ def get_random_vocab(language_given="", language_search="") -> Vocab:
     if len(vocabs) == 0:
         return ""
     while True:
-        vocab = vocabs[random.randint(0, len(vocabs) - 1)]
+        copy_vocab = vocabs[random.randint(0, len(vocabs) - 1)]
+        vocab = Vocab(
+            copy_vocab.lan_given,
+            copy_vocab.given,
+            copy_vocab.lan_searched,
+            copy_vocab.searched
+        )
         if language_given == vocab.lan_given \
                 or vocab.lan_searched \
                 and language_search == vocab.lan_given \
@@ -112,12 +118,15 @@ def get_languages() -> list[str]:
     return languages
 
 
-def remove_list(string: str) -> str:
-    string = string.replace("[", "")
-    string = string.replace("]", "")
-    string = string.replace("\"", "")
-    string = string.replace("'", "")
-    return string
+def remove_list(list: list) -> str:
+    final_string = ""
+    for i, string in enumerate(list):
+        string = string.replace("[", "")
+        string = string.replace("]", "")
+        string = string.replace("\"", "")
+        string = string.replace("'", "")
+        final_string += f"{string}, " if len(list) != i + 1 else string
+    return final_string
 
 
 def reload():

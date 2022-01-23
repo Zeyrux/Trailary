@@ -61,7 +61,7 @@ class Training(QMainWindow):
         self.widget_buttons.setLayout(self.layout_buttons)
 
         # tab
-        self.label_vocab = QLabel(str(self.cur_vocab.given))
+        self.label_vocab = QLabel(remove_list(self.cur_vocab.given))
 
         self.input_translation = CustomLineEdit(
             key_press=self.key_press,
@@ -110,7 +110,7 @@ class Training(QMainWindow):
             language_given=self.language_given,
             language_search=self.language_search
         )
-        self.label_vocab.setText(str(self.cur_vocab.given))
+        self.label_vocab.setText(remove_list(self.cur_vocab.given))
         self.input_translation.setText("")
 
     def check_input(self):
@@ -124,9 +124,7 @@ class Training(QMainWindow):
 
     def show_solution(self):
         self.is_check = False
-        self.input_translation.setText(remove_list(
-            str(self.cur_vocab.searched)
-        ))
+        self.input_translation.setText(remove_list(self.cur_vocab.searched))
 
     def help(self):
         ori = self.input_translation.text()
