@@ -18,7 +18,7 @@ class Vocab:
             given: list[str],
             lan_searched: str,
             searched: list[str],
-            line: int
+            line: int = -1
     ):
         self.lan_given = lan_given
         self.given = given

@@ -1,9 +1,11 @@
+import Tabs
+import lib
 from lib.Vocabulary import (
-    vocabs,
     remove_list,
     Vocab,
     edit_vocab,
-    delete_vocab
+    delete_vocab,
+    reload
 )
 from lib.CustomWidgets import CustomLineEdit, CustomDialog
 from PyQt6.QtCore import Qt, QObject
@@ -45,11 +47,12 @@ class AllVocabs(QMainWindow):
         self.setCentralWidget(self.widget)
 
     def reload(self):
+        reload()
         self.set_scroll_area()
 
     def set_scroll_area(self) -> QScrollArea:
         layout_vocabs = QVBoxLayout()
-        for i, vocab in enumerate(vocabs):
+        for i, vocab in enumerate(lib.Vocabulary.vocabs):
             layout_vocab = QHBoxLayout()
             layout_vocab.addWidget(CustomLineEdit(
                 key_release=self.edit_vocab,
@@ -109,12 +112,17 @@ class AllVocabs(QMainWindow):
                 int(vocab_widgets[4].text())
             )
             edit_vocab(vocab)
+            if Tabs.settings.show_dialogs:
+                CustomDialog(message="Vocab changed")
 
     def delete_vocab(self, event: QKeyEvent):
         if event.key() == Qt.Key.Key_Return:
             try:
                 line = int(self.line_edit_delete.text())
                 delete_vocab(line)
+                print(Tabs.settings.show_dialogs)
+                if Tabs.settings.show_dialogs:
+                    CustomDialog(message="Deleted line")
             except ValueError:
                 CustomDialog(
                     title="Warning",

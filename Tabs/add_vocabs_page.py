@@ -91,6 +91,7 @@ class AddVocabs(QMainWindow):
     def save(self):
         if not self.check():
             return
+        self.input_first_len.setFocus()
         # read all inputs
         first_len = self.input_first_len.text()
         first = self.input_first.text().split(",")

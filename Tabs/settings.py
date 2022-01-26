@@ -25,6 +25,7 @@ class Settings(QMainWindow):
     def change_dialog(self):
         global show_dialogs
         show_dialogs = False if show_dialogs else True
+        print(show_dialogs)
         if show_dialogs:
             self.button_dialogs.setText("Dialogs: On")
         else:
