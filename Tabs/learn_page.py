@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
 )
 
 
-STYLE = open("styles\\learn_tab.qss", "r").read()
+STYLE = open("styles\\learn_tab.css", "r").read()
 
 
 def get_tabs() -> list["Training"]:

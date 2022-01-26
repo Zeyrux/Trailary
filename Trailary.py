@@ -1,9 +1,10 @@
 import sys
 import ctypes
 
-from Tabs.learn_page import Training, get_tabs
+from Tabs.learn_page import get_tabs
 from Tabs.add_vocabs_page import AddVocabs
 from Tabs.all_vocabs import AllVocabs
+from Tabs.settings import Settings
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import (
@@ -27,12 +28,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(APP_NAME)
         self.setMinimumSize(800, 600)
 
-        # add new vocabs
-        widget_new_vocabs = AddVocabs()
-
-        # all vocabs
-        widget_all_vocabs = AllVocabs()
-
         # tabs
         self.tabs = QTabWidget()
         self.tabs.setTabPosition(QTabWidget.TabPosition.North)
@@ -46,8 +41,9 @@ class MainWindow(QMainWindow):
                 f"{tab.language_given} to {tab.language_search}"
             )
 
-        self.tabs.addTab(widget_new_vocabs, "add vocabs")
-        self.tabs.addTab(widget_all_vocabs, "all vocabs")
+        self.tabs.addTab(AddVocabs(), "Add vocabs")
+        self.tabs.addTab(AllVocabs(), "All vocabs")
+        self.tabs.addTab(Settings(), "Settings")
 
         self.setCentralWidget(self.tabs)
 

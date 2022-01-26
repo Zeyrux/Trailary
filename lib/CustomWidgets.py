@@ -1,5 +1,12 @@
 from PyQt6.QtGui import QKeyEvent
-from PyQt6.QtWidgets import QLineEdit
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QLineEdit,
+    QDialog,
+    QLabel,
+    QPushButton,
+    QVBoxLayout
+)
 
 
 def empty(_):
@@ -31,3 +38,19 @@ class CustomLineEdit(QLineEdit):
         super().keyReleaseEvent(event)
         self.key_release(event)
         event.accept()
+
+
+class CustomDialog(QDialog):
+    def __init__(self, title="INFO", message=""):
+        super().__init__()
+        self.setWindowTitle(title)
+
+        self.button_exit = QPushButton("Exit")
+        self.button_exit.clicked.connect(self.close)
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(QLabel(message))
+        self.layout.addWidget(self.button_exit)
+
+        self.setLayout(self.layout)
+        self.exec()

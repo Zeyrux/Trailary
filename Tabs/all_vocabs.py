@@ -1,5 +1,11 @@
-from lib.Vocabulary import vocabs, remove_list, Vocab, edit_vocab, copy_vocab
-from lib.CustomWidgets import CustomLineEdit
+from lib.Vocabulary import (
+    vocabs,
+    remove_list,
+    Vocab,
+    edit_vocab,
+    delete_vocab
+)
+from lib.CustomWidgets import CustomLineEdit, CustomDialog
 from PyQt6.QtCore import Qt, QObject
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import (
@@ -23,8 +29,14 @@ class AllVocabs(QMainWindow):
         self.button_reload = QPushButton("Reload vocabs")
         self.button_reload.clicked.connect(self.reload)
 
+        self.line_edit_delete = CustomLineEdit(
+            key_release=self.delete_vocab,
+            placeholder="vocab line, that should be deledet"
+        )
+
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.scroll_area_vocabs)
+        self.layout.addWidget(self.line_edit_delete)
         self.layout.addWidget(self.button_reload)
 
         self.widget = QWidget()
@@ -97,3 +109,14 @@ class AllVocabs(QMainWindow):
                 int(vocab_widgets[4].text())
             )
             edit_vocab(vocab)
+
+    def delete_vocab(self, event: QKeyEvent):
+        if event.key() == Qt.Key.Key_Return:
+            try:
+                line = int(self.line_edit_delete.text())
+                delete_vocab(line)
+            except ValueError:
+                CustomDialog(
+                    title="Warning",
+                    message="Please enter the line number"
+                )

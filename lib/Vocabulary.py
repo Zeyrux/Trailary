@@ -157,4 +157,10 @@ def reload():
     vocabs.sort()
 
 
+def delete_vocab(line):
+    lines = open(os.path.join(DIR_VOCAB, FILE_VOCAB), "r").readlines()
+    del lines[line]
+    open(os.path.join(DIR_VOCAB, FILE_VOCAB), "w").writelines(lines)
+
+
 reload()
