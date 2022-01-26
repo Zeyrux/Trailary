@@ -7,8 +7,10 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QWidget,
     QVBoxLayout,
+    QHBoxLayout,
     QLabel,
-    QPushButton
+    QPushButton,
+    QCheckBox
 )
 
 
@@ -25,21 +27,36 @@ class AddVocabs(QMainWindow):
         self.button_save.clicked.connect(self.save)
 
         # inputs
-        self.input_first_len = CustomLineEdit(
+        self.input_first_lan_checkbox = QCheckBox()
+        self.input_first_lan = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
             placeholder="First Language"
         )
+        self.layout_first_lan = QHBoxLayout()
+        self.layout_first_lan.addWidget(self.input_first_lan_checkbox)
+        self.layout_first_lan.addWidget(self.input_first_lan)
+        self.widget_first_lan = QWidget()
+        self.widget_first_lan.setLayout(self.layout_first_lan)
+
         self.input_first = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
             placeholder="First Word"
         )
-        self.input_second_len = CustomLineEdit(
+
+        self.input_second_lan_checkbox = QCheckBox()
+        self.input_second_lan = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
             placeholder="Second Language"
         )
+        self.layout_second_lan = QHBoxLayout()
+        self.layout_second_lan.addWidget(self.input_second_lan_checkbox)
+        self.layout_second_lan.addWidget(self.input_second_lan)
+        self.widget_second_lan = QWidget()
+        self.widget_second_lan.setLayout(self.layout_second_lan)
+
         self.input_second = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
@@ -48,9 +65,9 @@ class AddVocabs(QMainWindow):
 
         # list with all widgets that are can be steered
         self.steer_widgets = [
-            self.input_first_len,
+            self.input_first_lan,
             self.input_first,
-            self.input_second_len,
+            self.input_second_lan,
             self.input_second,
             self.button_save
         ]
@@ -60,9 +77,9 @@ class AddVocabs(QMainWindow):
         self.layout.addWidget(QLabel(
             "if there are alternative words, split they up with a comma"
         ))
-        self.layout.addWidget(self.input_first_len)
+        self.layout.addWidget(self.widget_first_lan)
         self.layout.addWidget(self.input_first)
-        self.layout.addWidget(self.input_second_len)
+        self.layout.addWidget(self.widget_second_lan)
         self.layout.addWidget(self.input_second)
         self.layout.addWidget(self.button_save)
 
@@ -91,11 +108,11 @@ class AddVocabs(QMainWindow):
     def save(self):
         if not self.check():
             return
-        self.input_first_len.setFocus()
+        self.input_first_lan.setFocus()
         # read all inputs
-        first_len = self.input_first_len.text()
+        first_len = self.input_first_lan.text()
         first = self.input_first.text().split(",")
-        second_len = self.input_second_len.text()
+        second_len = self.input_second_lan.text()
         second = self.input_second.text().split(",")
         # edit inputs
         for i, word in enumerate(first):
@@ -109,9 +126,11 @@ class AddVocabs(QMainWindow):
         save_vocabs([Vocab(first_len, first, second_len, second)])
 
     def clear_input(self):
-        self.input_first_len.clear()
+        if not self.input_first_lan_checkbox.isChecked():
+            self.input_first_lan.clear()
         self.input_first.clear()
-        self.input_second_len.clear()
+        if not self.input_second_lan_checkbox.isChecked():
+            self.input_second_lan.clear()
         self.input_second.clear()
 
     def focus_button(self):

@@ -16,7 +16,6 @@ from PyQt6.QtWidgets import (
     QPushButton
 )
 
-
 STYLE = open("styles\\learn_tab.css", "r").read()
 
 
@@ -32,6 +31,7 @@ def get_tabs() -> list["Training"]:
 
 class Training(QMainWindow):
     is_check = True
+    solution_shown = False
 
     def __init__(self, language_given, language_search):
         super().__init__()
@@ -108,6 +108,10 @@ class Training(QMainWindow):
         if event.key() == Qt.Key.Key_R \
                 and self.keyboard.key(Qt.Key.Key_Control):
             self.button_refresh.click()
+        # return; solution
+        if event.key() == Qt.Key.Key_Return \
+                and self.solution_shown:
+            self.refresh()
 
     def refresh(self):
         self.cur_vocab = get_random_vocab(
@@ -116,6 +120,7 @@ class Training(QMainWindow):
         )
         self.label_vocab.setText(remove_list(self.cur_vocab.given))
         self.input_translation.setText("")
+        self.solution_shown = False
 
     def check_input(self):
         inp = self.input_translation.text()
@@ -128,6 +133,7 @@ class Training(QMainWindow):
 
     def show_solution(self):
         self.is_check = False
+        self.solution_shown = True
         self.input_translation.setText(remove_list(self.cur_vocab.searched))
 
     def help(self):
