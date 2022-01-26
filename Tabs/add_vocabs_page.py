@@ -1,4 +1,4 @@
-from lib.Vocabulary import Vocab, save_vocab
+from lib.Vocabulary import Vocab, save_vocabs
 from lib.CustomWidgets import CustomLineEdit
 from lib.keyboard import Keyboard
 from PyQt6.QtGui import QKeyEvent, QMouseEvent
@@ -105,7 +105,7 @@ class AddVocabs(QMainWindow):
                 second[i] = word[1:len(word)]
         self.clear_input()
         # save inputs
-        save_vocab([Vocab(first_len, first, second_len, second)])
+        save_vocabs([Vocab(first_len, first, second_len, second)])
 
     def clear_input(self):
         self.input_first_len.clear()

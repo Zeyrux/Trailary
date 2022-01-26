@@ -1,4 +1,8 @@
-from lib.Vocabulary import get_random_vocab, get_languages, remove_list
+from lib.Vocabulary import (
+    get_random_vocab,
+    get_languages,
+    remove_list
+)
 from lib.keyboard import Keyboard
 from lib.CustomWidgets import CustomLineEdit
 from PyQt6.QtGui import QKeyEvent
