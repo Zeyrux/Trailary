@@ -112,7 +112,7 @@ class AllVocabs(QMainWindow):
                 int(vocab_widgets[4].text())
             )
             edit_vocab(vocab)
-            if Tabs.settings.show_dialogs:
+            if Tabs.settings_tab.show_dialogs:
                 CustomDialog(message="Vocab changed")
 
     def delete_vocab(self, event: QKeyEvent):
@@ -120,8 +120,8 @@ class AllVocabs(QMainWindow):
             try:
                 line = int(self.line_edit_delete.text())
                 delete_vocab(line)
-                print(Tabs.settings.show_dialogs)
-                if Tabs.settings.show_dialogs:
+                print(Tabs.settings_tab.show_dialogs)
+                if Tabs.settings_tab.show_dialogs:
                     CustomDialog(message="Deleted line")
             except ValueError:
                 CustomDialog(

@@ -1,10 +1,10 @@
 import sys
 import ctypes
 
-from Tabs.learn_page import get_tabs
-from Tabs.add_vocabs_page import AddVocabs
-from Tabs.all_vocabs import AllVocabs
-from Tabs.settings import Settings
+from Tabs.learn_tab import get_tabs
+from Tabs.add_vocabs_tab import AddVocabs
+from Tabs.all_vocabs_tab import AllVocabs
+from Tabs.settings_tab import Settings
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import (

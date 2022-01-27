@@ -47,16 +47,16 @@ class Training(QMainWindow):
         )
 
         # buttons bottom
-        self.button_help = QPushButton("Help")
+        self.button_help = QPushButton("Help (Strg + h)")
         self.button_help.clicked.connect(self.help)
 
-        self.button_solution = QPushButton("Show solution")
+        self.button_solution = QPushButton("Show solution (Strg + s)")
         self.button_solution.clicked.connect(self.show_solution)
 
-        self.button_refresh = QPushButton("Refresh")
+        self.button_refresh = QPushButton("Refresh (Strg + r)")
         self.button_refresh.clicked.connect(self.refresh)
 
-        self.layout_buttons = QHBoxLayout()
+        self.layout_buttons = QVBoxLayout()
         self.layout_buttons.addWidget(self.button_help)
         self.layout_buttons.addWidget(self.button_solution)
         self.layout_buttons.addWidget(self.button_refresh)
