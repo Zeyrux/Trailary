@@ -1,6 +1,7 @@
 #MainWidget {
 	background: rgb(100, 100, 100);
-	border-radius: 9px;
+	border-top-left-radius: 9px;
+	border-top-right-radius: 9px;
 }
 
 QPushButton {
@@ -8,6 +9,7 @@ QPushButton {
 	border: 3px solid rgb(53, 53, 110);
 	border-radius: 20px;
 	font-size: 35px;
+	color: rgb(235, 235, 235);
 	margin: 0 100%;
 	padding: 0;
 }
@@ -15,4 +17,15 @@ QPushButton {
 QPushButton:hover {
 	background-color: rgb(48, 48, 146);
 	font-size: 36px;
+}
+
+CustomLineEdit {
+	color: rgb(235, 235, 235);
+	background-color: rgb(65, 65, 65);
+	font-size: 45px;
+	selection-background-color: rgb(34, 34, 34);
+}
+
+QLabel {
+	font-size: 40px;
 }

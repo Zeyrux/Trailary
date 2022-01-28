@@ -16,7 +16,6 @@ from PyQt6.QtWidgets import (
 APP_NAME = "Trailary"
 STYLE_WINDOW = open("styles\\trailary_main.css", "r").read()
 STYLE_APP = "Fusion"
-STYLE_APP_SHEET = open("styles\\app.css").read()
 SCREEN_WIDTH = ctypes.windll.user32.GetSystemMetrics(0)
 SCREEN_HEIGHT = ctypes.windll.user32.GetSystemMetrics(1)
 
@@ -65,8 +64,6 @@ class MainWindow(QMainWindow):
 
 app = QApplication(sys.argv)
 app.setStyle(STYLE_APP)
-app.setObjectName("App")
-#app.setStyleSheet(STYLE_APP_SHEET)
 
 window = MainWindow()
 window.show()

@@ -24,8 +24,14 @@ def get_tabs() -> list["Training"]:
     tabs = []
     for i, language_given in enumerate(languages):
         for j in range(i + 1, len(languages)):
-            tabs.append(Training(language_given, languages[j]))
-            tabs.append(Training(languages[j], language_given))
+            tabs.append(Training(
+                language_given[0].upper() + language_given[1:],
+                languages[j][0].upper() + languages[j][1:]
+            ))
+            tabs.append(Training(
+                languages[j][0].upper() + languages[j][1:],
+                language_given[0].upper() + language_given[1:]
+            ))
     return tabs
 
 
@@ -66,12 +72,14 @@ class Training(QMainWindow):
 
         # tab
         self.label_vocab = QLabel(remove_list(self.cur_vocab.given))
+        self.label_vocab.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.input_translation = CustomLineEdit(
             key_press=self.key_press,
             key_release=self.key_release,
             placeholder="Translation"
         )
+        self.input_translation.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.input_translation.textChanged.connect(self.check_input)
 
         self.layout = QVBoxLayout()
