@@ -1,14 +1,18 @@
-* {
-	background-color: rgb(94, 94, 94);
-	font-size: 35px;
+#MainWidget {
+	background: rgb(100, 100, 100);
+	border-radius: 9px;
 }
 
 QPushButton {
 	background-color: rgb(66, 66, 139);
 	border: 3px solid rgb(53, 53, 110);
 	border-radius: 20px;
+	font-size: 35px;
+	margin: 0 100%;
+	padding: 0;
 }
 
-QLabel#Title {
-	border: 1px solid rgb(37, 37, 37);
+QPushButton:hover {
+	background-color: rgb(48, 48, 146);
+	font-size: 36px;
 }

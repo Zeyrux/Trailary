@@ -14,7 +14,9 @@ from PyQt6.QtWidgets import (
 )
 
 APP_NAME = "Trailary"
-STYLE = "Fusion"
+STYLE_WINDOW = open("styles\\trailary_main.css", "r").read()
+STYLE_APP = "Fusion"
+STYLE_APP_SHEET = open("styles\\app.css").read()
 SCREEN_WIDTH = ctypes.windll.user32.GetSystemMetrics(0)
 SCREEN_HEIGHT = ctypes.windll.user32.GetSystemMetrics(1)
 
@@ -45,6 +47,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(AllVocabs(), "All vocabs")
         self.tabs.addTab(Settings(), "Settings")
 
+        self.setStyleSheet(STYLE_WINDOW)
         self.setCentralWidget(self.tabs)
 
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
@@ -61,7 +64,9 @@ class MainWindow(QMainWindow):
 
 
 app = QApplication(sys.argv)
-app.setStyle(STYLE)
+app.setStyle(STYLE_APP)
+app.setObjectName("App")
+#app.setStyleSheet(STYLE_APP_SHEET)
 
 window = MainWindow()
 window.show()

@@ -81,6 +81,7 @@ class Training(QMainWindow):
 
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
+        self.widget.setObjectName("MainWidget")
         self.widget.setStyleSheet(STYLE)
 
         self.setCentralWidget(self.widget)
