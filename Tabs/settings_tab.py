@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
 
 show_dialogs = True
 
+STYLE = open("styles\\settings_tab.css", "r").read()
 
 class Settings(QMainWindow):
     def __init__(self):
@@ -20,12 +21,13 @@ class Settings(QMainWindow):
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
 
+        self.setObjectName("MainWidget")
+        self.setStyleSheet(STYLE)
         self.setCentralWidget(self.widget)
 
     def change_dialog(self):
         global show_dialogs
         show_dialogs = False if show_dialogs else True
-        print(show_dialogs)
         if show_dialogs:
             self.button_dialogs.setText("Dialogs: On")
         else:

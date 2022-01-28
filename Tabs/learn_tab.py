@@ -11,7 +11,6 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QWidget,
     QVBoxLayout,
-    QHBoxLayout,
     QLabel,
     QPushButton
 )
@@ -24,14 +23,8 @@ def get_tabs() -> list["Training"]:
     tabs = []
     for i, language_given in enumerate(languages):
         for j in range(i + 1, len(languages)):
-            tabs.append(Training(
-                language_given[0].upper() + language_given[1:],
-                languages[j][0].upper() + languages[j][1:]
-            ))
-            tabs.append(Training(
-                languages[j][0].upper() + languages[j][1:],
-                language_given[0].upper() + language_given[1:]
-            ))
+            tabs.append(Training(language_given, languages[j]))
+            tabs.append(Training(languages[j], language_given))
     return tabs
 
 

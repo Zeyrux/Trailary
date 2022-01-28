@@ -39,7 +39,9 @@ class MainWindow(QMainWindow):
         for tab in learn_tabs:
             self.tabs.addTab(
                 tab.widget,
-                f"{tab.language_given} to {tab.language_search}"
+                f"{tab.language_given[0].upper() + tab.language_given[1:]} "
+                f"to "
+                f"{tab.language_search[0].upper() + tab.language_search[1:]}"
             )
 
         self.tabs.addTab(AddVocabs(), "Add vocabs")
