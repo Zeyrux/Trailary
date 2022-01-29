@@ -14,7 +14,8 @@ from PyQt6.QtWidgets import (
 )
 
 APP_NAME = "Trailary"
-STYLE_WINDOW = open("styles\\trailary_main.css", "r").read()
+STYLE_MAIN_WIDGET = open("styles\\MainWidget.css", "r").read()
+STYLE_WINDOW = open("styles\\TrailaryMain.css", "r").read()
 STYLE_APP = "Fusion"
 SCREEN_WIDTH = ctypes.windll.user32.GetSystemMetrics(0)
 SCREEN_HEIGHT = ctypes.windll.user32.GetSystemMetrics(1)
@@ -34,7 +35,7 @@ class MainWindow(QMainWindow):
         self.tabs.setTabPosition(QTabWidget.TabPosition.North)
         self.tabs.setMovable(True)
 
-        learn_tabs = get_tabs()
+        learn_tabs = get_tabs([STYLE_MAIN_WIDGET])
 
         for tab in learn_tabs:
             self.tabs.addTab(
@@ -44,9 +45,9 @@ class MainWindow(QMainWindow):
                 f"{tab.language_search[0].upper() + tab.language_search[1:]}"
             )
 
-        self.tabs.addTab(AddVocabs(), "Add vocabs")
-        self.tabs.addTab(AllVocabs(), "All vocabs")
-        self.tabs.addTab(Settings(), "Settings")
+        self.tabs.addTab(AddVocabs([STYLE_MAIN_WIDGET]), "Add vocabs")
+        self.tabs.addTab(AllVocabs([STYLE_MAIN_WIDGET]), "All vocabs")
+        self.tabs.addTab(Settings([STYLE_MAIN_WIDGET]), "Settings")
 
         self.setStyleSheet(STYLE_WINDOW)
         self.setCentralWidget(self.tabs)

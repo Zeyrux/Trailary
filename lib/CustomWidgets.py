@@ -1,5 +1,4 @@
 from PyQt6.QtGui import QKeyEvent
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QLineEdit,
     QDialog,
@@ -11,6 +10,13 @@ from PyQt6.QtWidgets import (
 
 def empty(_):
     pass
+
+
+def get_styles(styles: list[str]) -> str:
+    final_style = ""
+    for style in styles:
+        final_style += style
+    return final_style
 
 
 class CustomLineEdit(QLineEdit):

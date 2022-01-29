@@ -4,7 +4,7 @@ from lib.Vocabulary import (
     remove_list
 )
 from lib.keyboard import Keyboard
-from lib.CustomWidgets import CustomLineEdit
+from lib.CustomWidgets import CustomLineEdit, get_styles
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -15,16 +15,16 @@ from PyQt6.QtWidgets import (
     QPushButton
 )
 
-STYLE = open("styles\\learn_tab.css", "r").read()
+STYLE = open("styles\\LearnTab.css", "r").read()
 
 
-def get_tabs() -> list["Training"]:
+def get_tabs(styles) -> list["Training"]:
     languages = get_languages()
     tabs = []
     for i, language_given in enumerate(languages):
         for j in range(i + 1, len(languages)):
-            tabs.append(Training(language_given, languages[j]))
-            tabs.append(Training(languages[j], language_given))
+            tabs.append(Training(language_given, languages[j], styles=styles))
+            tabs.append(Training(languages[j], language_given, styles=styles))
     return tabs
 
 
@@ -32,7 +32,7 @@ class Training(QMainWindow):
     is_check = True
     solution_shown = False
 
-    def __init__(self, language_given, language_search):
+    def __init__(self, language_given, language_search, styles=[]):
         super().__init__()
 
         self.keyboard = Keyboard([Qt.Key.Key_Control])
@@ -83,8 +83,10 @@ class Training(QMainWindow):
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
         self.widget.setObjectName("MainWidget")
-        self.widget.setStyleSheet(STYLE)
 
+        styles.append(STYLE)
+        self.widget.setStyleSheet(get_styles(styles))
+        
         self.setCentralWidget(self.widget)
 
     def keyReleaseEvent(self, event: QKeyEvent) -> None:

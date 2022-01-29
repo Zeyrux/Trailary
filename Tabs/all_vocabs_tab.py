@@ -7,7 +7,7 @@ from lib.Vocabulary import (
     delete_vocab,
     reload
 )
-from lib.CustomWidgets import CustomLineEdit, CustomDialog
+from lib.CustomWidgets import CustomLineEdit, CustomDialog, get_styles
 from PyQt6.QtCore import Qt, QObject
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import (
@@ -21,8 +21,11 @@ from PyQt6.QtWidgets import (
 )
 
 
+STYLE = open("styles\\AllVocabs.css", "r").read()
+
+
 class AllVocabs(QMainWindow):
-    def __init__(self):
+    def __init__(self, styles=[]):
         super().__init__()
 
         self.scroll_area_vocabs = QScrollArea()
@@ -43,6 +46,9 @@ class AllVocabs(QMainWindow):
 
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
+
+        styles.append(STYLE)
+        self.widget.setStyleSheet(get_styles(styles))
 
         self.setCentralWidget(self.widget)
 

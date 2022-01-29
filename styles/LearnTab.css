@@ -1,0 +1,27 @@
+QPushButton {
+	background-color: rgba(66, 66, 139, 0.5);
+	border: 3px solid rgb(53, 53, 110);
+	border-radius: 20px;
+	font-size: 35px;
+	color: rgb(233, 233, 233);
+	margin: 0 100%;
+	padding: 0;
+}
+
+QPushButton:hover {
+	background-color: rgb(66, 66, 139);
+	font-size: 36px;
+}
+
+CustomLineEdit {
+	color: rgb(233, 233, 233);
+	background-color: rgb(65, 65, 65);
+	font-size: 45px;
+	margin: 0 20px;
+	selection-background-color: rgb(34, 34, 34);
+}
+
+QLabel {
+	color: rgb(192, 192, 192);
+	font-size: 40px;
+}

@@ -1,5 +1,5 @@
 from lib.Vocabulary import Vocab, save_vocabs
-from lib.CustomWidgets import CustomLineEdit
+from lib.CustomWidgets import CustomLineEdit, get_styles
 from lib.keyboard import Keyboard
 from PyQt6.QtGui import QKeyEvent, QMouseEvent
 from PyQt6.QtCore import Qt
@@ -14,10 +14,13 @@ from PyQt6.QtWidgets import (
 )
 
 
+STYLE = open("styles\\AddVocabs.css", "r").read()
+
+
 class AddVocabs(QMainWindow):
     is_button_focus = False
 
-    def __init__(self):
+    def __init__(self, styles=[]):
         super().__init__()
 
         self.keyboard = Keyboard([Qt.Key.Key_Control])
@@ -27,6 +30,7 @@ class AddVocabs(QMainWindow):
         self.button_save.clicked.connect(self.save)
 
         # inputs
+        # first lan
         self.input_first_lan_checkbox = QCheckBox()
         self.input_first_lan = CustomLineEdit(
             key_release=self.key_release,
@@ -39,12 +43,14 @@ class AddVocabs(QMainWindow):
         self.widget_first_lan = QWidget()
         self.widget_first_lan.setLayout(self.layout_first_lan)
 
+        # first word
         self.input_first = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
             placeholder="First Word"
         )
 
+        # second lan
         self.input_second_lan_checkbox = QCheckBox()
         self.input_second_lan = CustomLineEdit(
             key_release=self.key_release,
@@ -86,6 +92,10 @@ class AddVocabs(QMainWindow):
         # widget
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
+        self.widget.setObjectName("MainWidget")
+
+        styles.append(STYLE)
+        self.widget.setStyleSheet(get_styles(styles))
 
         self.setCentralWidget(self.widget)
 
@@ -109,6 +119,7 @@ class AddVocabs(QMainWindow):
         if not self.check():
             return
         self.input_first_lan.setFocus()
+        self.remove_focus_button()
         # read all inputs
         first_len = self.input_first_lan.text()
         first = self.input_first.text().split(",")
