@@ -7,16 +7,14 @@ from lib.Vocabulary import (
     delete_vocab,
     reload
 )
-from lib.CustomWidgets import CustomLineEdit, CustomDialog
+from lib.CustomWidgets import CustomLineEdit, CustomDialog, CustomScrollArea
 from lib.Style import Style
 from PyQt6.QtCore import Qt, QObject
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import (
     QMainWindow,
-    QHBoxLayout,
     QVBoxLayout,
     QGridLayout,
-    QScrollArea,
     QWidget,
     QPushButton,
     QLabel
@@ -27,7 +25,9 @@ class AllVocabs(QMainWindow):
     def __init__(self, style=Style([])):
         super().__init__()
 
-        self.scroll_area_vocabs = QScrollArea()
+        self.scroll_area_vocabs = CustomScrollArea(
+            alignment=Qt.AlignmentFlag.AlignCenter
+        )
 
         self.button_reload = QPushButton("Reload vocabs")
         self.button_reload.clicked.connect(self.reload)
@@ -55,7 +55,7 @@ class AllVocabs(QMainWindow):
         reload()
         self.set_scroll_area()
 
-    def set_scroll_area(self) -> QScrollArea:
+    def set_scroll_area(self) -> CustomScrollArea:
         layout_vocabs = QGridLayout()
         for i, vocab in enumerate(lib.Vocabulary.vocabs):
             layout_vocabs.addWidget(CustomLineEdit(
@@ -87,7 +87,7 @@ class AllVocabs(QMainWindow):
             layout_vocabs.addWidget(line_label, i, 4)
 
         widget_vocabs = QWidget()
-        widget_vocabs.setObjectName("Table")
+        widget_vocabs.setObjectName("QGridLayout")
         widget_vocabs.setLayout(layout_vocabs)
 
         self.scroll_area_vocabs.setWidget(widget_vocabs)
@@ -96,7 +96,7 @@ class AllVocabs(QMainWindow):
         if event.key() == Qt.Key.Key_Return:
             vocab_widgets: list[QObject]
             children = self.scroll_area_vocabs.findChildren(
-                QWidget, "Table"
+                QWidget, "QGridLayout"
             )[0]
             for child in children.children()[1:]:
                 if child.hasFocus():

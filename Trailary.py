@@ -19,6 +19,8 @@ STYLE_MAIN_WIDGET = open("styles\\MainWidget.css", "r").read()
 STYLE_CUSTOM_LINE_EDIT = open("styles\\CustomLineEdit.css", "r").read()
 STYLE_Q_BUTTON_PUSH = open("styles\\QPushButton.css", "r").read()
 STYLE_Q_LABEL = open("styles\\QLabel.css", "r").read()
+STYLE_Q_SCROLL_AREA = open("styles\\QScrollArea.css", "r").read()
+STYLE_Q_GRID_LAYOUT = open("styles\\QGridLayout.css", "r").read()
 
 STYLE_WINDOW = open("styles\\TrailaryMain.css", "r").read()
 STYLE_APP = "Fusion"
@@ -37,25 +39,31 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(600, 1000)
 
         # styles
+        # learn
         learn_tabs_style = Style([
             STYLE_MAIN_WIDGET,
             STYLE_CUSTOM_LINE_EDIT,
             STYLE_Q_BUTTON_PUSH,
             STYLE_Q_LABEL
         ])
+        # add vocabs
         add_vocabs_style = Style([
             STYLE_MAIN_WIDGET,
             STYLE_CUSTOM_LINE_EDIT,
             STYLE_Q_BUTTON_PUSH,
             STYLE_Q_LABEL
         ])
+        # all vocabs
         all_vocabs_style = Style([
             STYLE_MAIN_WIDGET,
             STYLE_CUSTOM_LINE_EDIT,
             STYLE_Q_BUTTON_PUSH,
-            STYLE_Q_LABEL
+            STYLE_Q_LABEL,
+            STYLE_Q_SCROLL_AREA,
+            STYLE_Q_GRID_LAYOUT
         ])
-        all_vocabs_style.change_font_size("CustomLineEdit", 20)
+        all_vocabs_style.change_font_size("CustomLineEdit", "20px")
+        # settings
         settings_style = Style([
             STYLE_MAIN_WIDGET,
             STYLE_Q_BUTTON_PUSH

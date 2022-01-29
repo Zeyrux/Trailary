@@ -5,7 +5,8 @@ from PyQt6.QtWidgets import (
     QDialog,
     QLabel,
     QPushButton,
-    QVBoxLayout
+    QVBoxLayout,
+    QScrollArea
 )
 
 
@@ -56,3 +57,9 @@ class CustomDialog(QDialog):
 
         self.setLayout(self.layout)
         self.exec()
+
+
+class CustomScrollArea(QScrollArea):
+    def __init__(self, alignment=Qt.AlignmentFlag.AlignLeft):
+        super().__init__()
+        self.setAlignment(alignment)
