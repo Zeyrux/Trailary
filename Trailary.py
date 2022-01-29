@@ -55,6 +55,7 @@ class MainWindow(QMainWindow):
             STYLE_Q_BUTTON_PUSH,
             STYLE_Q_LABEL
         ])
+        all_vocabs_style.change_font_size("CustomLineEdit", 20)
         settings_style = Style([
             STYLE_MAIN_WIDGET,
             STYLE_Q_BUTTON_PUSH

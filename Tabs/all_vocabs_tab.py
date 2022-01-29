@@ -103,6 +103,7 @@ class AllVocabs(QMainWindow):
                     vocab_widgets = self.scroll_area_vocabs.findChildren(
                         QWidget, child.objectName()
                     )
+                    break
             vocab = Vocab(
                 vocab_widgets[0].text(),
                 vocab_widgets[1].text().split(", "),
