@@ -4,7 +4,8 @@ from lib.Vocabulary import (
     remove_list
 )
 from lib.keyboard import Keyboard
-from lib.CustomWidgets import CustomLineEdit, get_styles
+from lib.CustomWidgets import CustomLineEdit
+from lib.Style import Style
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -15,16 +16,14 @@ from PyQt6.QtWidgets import (
     QPushButton
 )
 
-STYLE = open("styles\\LearnTab.css", "r").read()
 
-
-def get_tabs(styles) -> list["Training"]:
+def get_tabs(style: Style) -> list["Training"]:
     languages = get_languages()
     tabs = []
     for i, language_given in enumerate(languages):
         for j in range(i + 1, len(languages)):
-            tabs.append(Training(language_given, languages[j], styles=styles))
-            tabs.append(Training(languages[j], language_given, styles=styles))
+            tabs.append(Training(language_given, languages[j], style=style))
+            tabs.append(Training(languages[j], language_given, style=style))
     return tabs
 
 
@@ -32,7 +31,7 @@ class Training(QMainWindow):
     is_check = True
     solution_shown = False
 
-    def __init__(self, language_given, language_search, styles=[]):
+    def __init__(self, language_given, language_search, style=Style([])):
         super().__init__()
 
         self.keyboard = Keyboard([Qt.Key.Key_Control])
@@ -70,9 +69,9 @@ class Training(QMainWindow):
         self.input_translation = CustomLineEdit(
             key_press=self.key_press,
             key_release=self.key_release,
-            placeholder="Translation"
+            placeholder="Translation",
+            alignment=Qt.AlignmentFlag.AlignCenter
         )
-        self.input_translation.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.input_translation.textChanged.connect(self.check_input)
 
         self.layout = QVBoxLayout()
@@ -84,8 +83,7 @@ class Training(QMainWindow):
         self.widget.setLayout(self.layout)
         self.widget.setObjectName("MainWidget")
 
-        styles.append(STYLE)
-        self.widget.setStyleSheet(get_styles(styles))
+        self.widget.setStyleSheet(style.style)
         
         self.setCentralWidget(self.widget)
 

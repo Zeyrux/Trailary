@@ -1,4 +1,5 @@
 from PyQt6.QtGui import QKeyEvent
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QLineEdit,
     QDialog,
@@ -12,13 +13,6 @@ def empty(_):
     pass
 
 
-def get_styles(styles: list[str]) -> str:
-    final_style = ""
-    for style in styles:
-        final_style += style
-    return final_style
-
-
 class CustomLineEdit(QLineEdit):
     def __init__(
             self,
@@ -26,7 +20,8 @@ class CustomLineEdit(QLineEdit):
             key_release=empty,
             object_name="",
             placeholder="",
-            text=""
+            text="",
+            alignment=Qt.AlignmentFlag.AlignLeft
     ):
         super().__init__()
         self.key_press = key_press
@@ -34,6 +29,7 @@ class CustomLineEdit(QLineEdit):
         self.setObjectName(object_name)
         self.setPlaceholderText(placeholder)
         self.setText(text)
+        self.setAlignment(alignment)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
         super().keyPressEvent(event)

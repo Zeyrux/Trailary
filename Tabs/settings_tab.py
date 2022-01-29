@@ -1,4 +1,4 @@
-from lib.CustomWidgets import get_styles
+from lib.Style import Style
 from PyQt6.QtWidgets import (
     QMainWindow,
     QPushButton,
@@ -8,11 +8,9 @@ from PyQt6.QtWidgets import (
 
 show_dialogs = True
 
-STYLE = open("styles\\SettingsTab.css", "r").read()
-
 
 class Settings(QMainWindow):
-    def __init__(self, styles=[]):
+    def __init__(self, style=Style([])):
         super().__init__()
         self.button_dialogs = QPushButton("Dialogs: On")
         self.button_dialogs.clicked.connect(self.change_dialog)
@@ -25,8 +23,7 @@ class Settings(QMainWindow):
 
         self.setObjectName("MainWidget")
 
-        styles.append(STYLE)
-        self.setStyleSheet(get_styles(styles))
+        self.setStyleSheet(style.style)
         
         self.setCentralWidget(self.widget)
 

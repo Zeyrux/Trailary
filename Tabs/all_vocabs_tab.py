@@ -7,13 +7,15 @@ from lib.Vocabulary import (
     delete_vocab,
     reload
 )
-from lib.CustomWidgets import CustomLineEdit, CustomDialog, get_styles
+from lib.CustomWidgets import CustomLineEdit, CustomDialog
+from lib.Style import Style
 from PyQt6.QtCore import Qt, QObject
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import (
     QMainWindow,
     QHBoxLayout,
     QVBoxLayout,
+    QGridLayout,
     QScrollArea,
     QWidget,
     QPushButton,
@@ -21,22 +23,19 @@ from PyQt6.QtWidgets import (
 )
 
 
-STYLE = open("styles\\AllVocabs.css", "r").read()
-
-
 class AllVocabs(QMainWindow):
-    def __init__(self, styles=[]):
+    def __init__(self, style=Style([])):
         super().__init__()
 
         self.scroll_area_vocabs = QScrollArea()
-        self.set_scroll_area()
 
         self.button_reload = QPushButton("Reload vocabs")
         self.button_reload.clicked.connect(self.reload)
 
         self.line_edit_delete = CustomLineEdit(
             key_release=self.delete_vocab,
-            placeholder="vocab line, that should be deledet"
+            placeholder="vocab line, that should be deledet",
+            alignment=Qt.AlignmentFlag.AlignCenter
         )
 
         self.layout = QVBoxLayout()
@@ -46,10 +45,10 @@ class AllVocabs(QMainWindow):
 
         self.widget = QWidget()
         self.widget.setLayout(self.layout)
+        self.widget.setObjectName("MainWidget")
+        self.widget.setStyleSheet(style.style)
 
-        styles.append(STYLE)
-        self.widget.setStyleSheet(get_styles(styles))
-
+        self.set_scroll_area()
         self.setCentralWidget(self.widget)
 
     def reload(self):
@@ -57,38 +56,38 @@ class AllVocabs(QMainWindow):
         self.set_scroll_area()
 
     def set_scroll_area(self) -> QScrollArea:
-        layout_vocabs = QVBoxLayout()
+        layout_vocabs = QGridLayout()
         for i, vocab in enumerate(lib.Vocabulary.vocabs):
-            layout_vocab = QHBoxLayout()
-            layout_vocab.addWidget(CustomLineEdit(
+            layout_vocabs.addWidget(CustomLineEdit(
                 key_release=self.edit_vocab,
                 object_name=str(i),
-                text=vocab.lan_given
-            ))
-            layout_vocab.addWidget(CustomLineEdit(
+                text=vocab.lan_given,
+                alignment=Qt.AlignmentFlag.AlignCenter
+            ), i, 0)
+            layout_vocabs.addWidget(CustomLineEdit(
                 key_release=self.edit_vocab,
                 object_name=str(i),
-                text=remove_list(vocab.given)
-            ))
-            layout_vocab.addWidget(CustomLineEdit(
+                text=remove_list(vocab.given),
+                alignment=Qt.AlignmentFlag.AlignCenter
+            ), i, 1)
+            layout_vocabs.addWidget(CustomLineEdit(
                 key_release=self.edit_vocab,
                 object_name=str(i),
-                text=vocab.lan_searched
-            ))
-            layout_vocab.addWidget(CustomLineEdit(
+                text=vocab.lan_searched,
+                alignment=Qt.AlignmentFlag.AlignCenter
+            ), i, 2)
+            layout_vocabs.addWidget(CustomLineEdit(
                 key_release=self.edit_vocab,
                 object_name=str(i),
-                text=remove_list(vocab.searched)
-            ))
+                text=remove_list(vocab.searched),
+                alignment=Qt.AlignmentFlag.AlignCenter
+            ), i, 3)
             line_label = QLabel(str(vocab.line))
             line_label.setObjectName(str(i))
-            layout_vocab.addWidget(line_label)
-            widget = QWidget()
-            widget.setLayout(layout_vocab)
-            layout_vocabs.addWidget(widget)
+            layout_vocabs.addWidget(line_label, i, 4)
 
         widget_vocabs = QWidget()
-        widget_vocabs.setObjectName("object")
+        widget_vocabs.setObjectName("Table")
         widget_vocabs.setLayout(layout_vocabs)
 
         self.scroll_area_vocabs.setWidget(widget_vocabs)
@@ -97,19 +96,13 @@ class AllVocabs(QMainWindow):
         if event.key() == Qt.Key.Key_Return:
             vocab_widgets: list[QObject]
             children = self.scroll_area_vocabs.findChildren(
-                QWidget, "object"
+                QWidget, "Table"
             )[0]
-            has_found_focus = False
             for child in children.children()[1:]:
-                if has_found_focus:
-                    break
-                for line_edit in child.children()[1:]:
-                    if line_edit.hasFocus():
-                        vocab_widgets = self.scroll_area_vocabs.findChildren(
-                            QWidget, line_edit.objectName()
-                        )
-                        has_found_focus = True
-                        break
+                if child.hasFocus():
+                    vocab_widgets = self.scroll_area_vocabs.findChildren(
+                        QWidget, child.objectName()
+                    )
             vocab = Vocab(
                 vocab_widgets[0].text(),
                 vocab_widgets[1].text().split(", "),

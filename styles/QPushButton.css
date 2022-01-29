@@ -1,20 +1,14 @@
-#MainWidget {
-	background: rgb(100, 100, 100);
-	border-top-left-radius: 9px;
-	border-top-right-radius: 9px;
-}
-
 QPushButton {
-	font-size: 25px;
 	background-color: rgba(66, 66, 139, 0.5);
 	border: 3px solid rgb(53, 53, 110);
-	border-radius: 15px;
+	border-radius: 20px;
+	font-size: 35px;
 	color: rgb(233, 233, 233);
 	margin: 0 100%;
 	padding: 0;
 }
 
 QPushButton:hover {
-	font-size: 27px;
 	background-color: rgb(66, 66, 139);
+	font-size: 36px;
 }

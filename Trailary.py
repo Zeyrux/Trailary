@@ -5,6 +5,7 @@ from Tabs.learn_tab import get_tabs
 from Tabs.add_vocabs_tab import AddVocabs
 from Tabs.all_vocabs_tab import AllVocabs
 from Tabs.settings_tab import Settings
+from lib.Style import Style
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import (
@@ -15,6 +16,10 @@ from PyQt6.QtWidgets import (
 
 APP_NAME = "Trailary"
 STYLE_MAIN_WIDGET = open("styles\\MainWidget.css", "r").read()
+STYLE_CUSTOM_LINE_EDIT = open("styles\\CustomLineEdit.css", "r").read()
+STYLE_Q_BUTTON_PUSH = open("styles\\QPushButton.css", "r").read()
+STYLE_Q_LABEL = open("styles\\QLabel.css", "r").read()
+
 STYLE_WINDOW = open("styles\\TrailaryMain.css", "r").read()
 STYLE_APP = "Fusion"
 SCREEN_WIDTH = ctypes.windll.user32.GetSystemMetrics(0)
@@ -28,14 +33,39 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle(APP_NAME)
-        self.setMinimumSize(800, 600)
+        self.setBaseSize(600, 1000)
+        self.setMinimumSize(600, 1000)
+
+        # styles
+        learn_tabs_style = Style([
+            STYLE_MAIN_WIDGET,
+            STYLE_CUSTOM_LINE_EDIT,
+            STYLE_Q_BUTTON_PUSH,
+            STYLE_Q_LABEL
+        ])
+        add_vocabs_style = Style([
+            STYLE_MAIN_WIDGET,
+            STYLE_CUSTOM_LINE_EDIT,
+            STYLE_Q_BUTTON_PUSH,
+            STYLE_Q_LABEL
+        ])
+        all_vocabs_style = Style([
+            STYLE_MAIN_WIDGET,
+            STYLE_CUSTOM_LINE_EDIT,
+            STYLE_Q_BUTTON_PUSH,
+            STYLE_Q_LABEL
+        ])
+        settings_style = Style([
+            STYLE_MAIN_WIDGET,
+            STYLE_Q_BUTTON_PUSH
+        ])
 
         # tabs
         self.tabs = QTabWidget()
         self.tabs.setTabPosition(QTabWidget.TabPosition.North)
         self.tabs.setMovable(True)
 
-        learn_tabs = get_tabs([STYLE_MAIN_WIDGET])
+        learn_tabs = get_tabs(learn_tabs_style)
 
         for tab in learn_tabs:
             self.tabs.addTab(
@@ -45,9 +75,9 @@ class MainWindow(QMainWindow):
                 f"{tab.language_search[0].upper() + tab.language_search[1:]}"
             )
 
-        self.tabs.addTab(AddVocabs([STYLE_MAIN_WIDGET]), "Add vocabs")
-        self.tabs.addTab(AllVocabs([STYLE_MAIN_WIDGET]), "All vocabs")
-        self.tabs.addTab(Settings([STYLE_MAIN_WIDGET]), "Settings")
+        self.tabs.addTab(AddVocabs(add_vocabs_style), "Add vocabs")
+        self.tabs.addTab(AllVocabs(all_vocabs_style), "All vocabs")
+        self.tabs.addTab(Settings(settings_style), "Settings")
 
         self.setStyleSheet(STYLE_WINDOW)
         self.setCentralWidget(self.tabs)

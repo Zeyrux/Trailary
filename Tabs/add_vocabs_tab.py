@@ -1,5 +1,6 @@
 from lib.Vocabulary import Vocab, save_vocabs
-from lib.CustomWidgets import CustomLineEdit, get_styles
+from lib.CustomWidgets import CustomLineEdit
+from lib.Style import Style
 from lib.keyboard import Keyboard
 from PyQt6.QtGui import QKeyEvent, QMouseEvent
 from PyQt6.QtCore import Qt
@@ -13,14 +14,10 @@ from PyQt6.QtWidgets import (
     QCheckBox
 )
 
-
-STYLE = open("styles\\AddVocabs.css", "r").read()
-
-
 class AddVocabs(QMainWindow):
     is_button_focus = False
 
-    def __init__(self, styles=[]):
+    def __init__(self, style=Style([])):
         super().__init__()
 
         self.keyboard = Keyboard([Qt.Key.Key_Control])
@@ -35,7 +32,8 @@ class AddVocabs(QMainWindow):
         self.input_first_lan = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
-            placeholder="First Language"
+            placeholder="First Language",
+            alignment=Qt.AlignmentFlag.AlignCenter
         )
         self.layout_first_lan = QHBoxLayout()
         self.layout_first_lan.addWidget(self.input_first_lan_checkbox)
@@ -47,7 +45,8 @@ class AddVocabs(QMainWindow):
         self.input_first = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
-            placeholder="First Word"
+            placeholder="First Word",
+            alignment=Qt.AlignmentFlag.AlignCenter
         )
 
         # second lan
@@ -55,7 +54,8 @@ class AddVocabs(QMainWindow):
         self.input_second_lan = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
-            placeholder="Second Language"
+            placeholder="Second Language",
+            alignment=Qt.AlignmentFlag.AlignCenter
         )
         self.layout_second_lan = QHBoxLayout()
         self.layout_second_lan.addWidget(self.input_second_lan_checkbox)
@@ -66,7 +66,8 @@ class AddVocabs(QMainWindow):
         self.input_second = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
-            placeholder="Second Word"
+            placeholder="Second Word",
+            alignment=Qt.AlignmentFlag.AlignCenter
         )
 
         # list with all widgets that are can be steered
@@ -94,8 +95,7 @@ class AddVocabs(QMainWindow):
         self.widget.setLayout(self.layout)
         self.widget.setObjectName("MainWidget")
 
-        styles.append(STYLE)
-        self.widget.setStyleSheet(get_styles(styles))
+        self.widget.setStyleSheet(style.style)
 
         self.setCentralWidget(self.widget)
 
