@@ -63,3 +63,35 @@ class CustomScrollArea(QScrollArea):
     def __init__(self, alignment=Qt.AlignmentFlag.AlignLeft):
         super().__init__()
         self.setAlignment(alignment)
+
+
+class CustomPushButton(QPushButton):
+
+    is_focused = False
+
+    def __init__(
+            self,
+            text="",
+            color_unfocus="rgb(105, 17, 5)",
+            color_focus="rgb(41, 112, 35)"
+    ):
+        super().__init__()
+
+        self.color_unfocus = color_unfocus
+        self.color_focus = color_focus
+
+        self.setText(text)
+
+    def unfocus(self):
+        self.setStyleSheet(f"background: {self.color_unfocus};")
+        self.is_focused = False
+
+    def focus(self):
+        self.setStyleSheet(f"background: {self.color_focus};")
+        self.is_focused = True
+
+    def change_focus(self):
+        if self.is_focused:
+            self.unfocus()
+        else:
+            self.focus()

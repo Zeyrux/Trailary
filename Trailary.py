@@ -35,8 +35,8 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle(APP_NAME)
-        self.setBaseSize(600, 1000)
-        self.setMinimumSize(600, 1000)
+        self.setBaseSize(400, 800)
+        self.setMinimumSize(400, 800)
 
         # styles
         # learn

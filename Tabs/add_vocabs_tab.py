@@ -1,5 +1,5 @@
 from lib.Vocabulary import Vocab, save_vocabs
-from lib.CustomWidgets import CustomLineEdit
+from lib.CustomWidgets import CustomLineEdit, CustomPushButton, CustomDialog
 from lib.Style import Style
 from lib.keyboard import Keyboard
 from PyQt6.QtGui import QKeyEvent, QMouseEvent
@@ -10,12 +10,11 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
-    QPushButton,
     QCheckBox
 )
 
+
 class AddVocabs(QMainWindow):
-    is_button_focus = False
 
     def __init__(self, style=Style([])):
         super().__init__()
@@ -23,7 +22,7 @@ class AddVocabs(QMainWindow):
         self.keyboard = Keyboard([Qt.Key.Key_Control])
 
         # button
-        self.button_save = QPushButton("Save")
+        self.button_save = CustomPushButton(text="Save")
         self.button_save.clicked.connect(self.save)
 
         # inputs
@@ -101,7 +100,7 @@ class AddVocabs(QMainWindow):
 
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
-            self.remove_focus_button()
+            self.button_save.unfocus()
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
         self.keyboard.key_press(event)
@@ -109,22 +108,22 @@ class AddVocabs(QMainWindow):
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
         self.keyboard.key_release(event)
 
-    def check(self) -> bool:
-        if self.input_first.text() == "" \
-                or self.input_second.text() == "":
-            return False
-        return True
-
     def save(self):
-        if not self.check():
-            return
         self.input_first_lan.setFocus()
-        self.remove_focus_button()
+        self.button_save.unfocus()
         # read all inputs
-        first_len = self.input_first_lan.text()
-        first = self.input_first.text().split(",")
-        second_len = self.input_second_lan.text()
-        second = self.input_second.text().split(",")
+        first_lan = self.input_first_lan.text()
+        first = self.input_first.text()
+        second_lan = self.input_second_lan.text()
+        second = self.input_second.text()
+        if first_lan == "" \
+                or second_lan == "" \
+                or first == "" \
+                or second == "":
+            CustomDialog(message="Please fill every input field!")
+            return
+        first = first.split(",")
+        second = second.split(",")
         # edit inputs
         for i, word in enumerate(first):
             if word[0] == " ":
@@ -134,7 +133,7 @@ class AddVocabs(QMainWindow):
                 second[i] = word[1:len(word)]
         self.clear_input()
         # save inputs
-        save_vocabs([Vocab(first_len, first, second_len, second)])
+        save_vocabs([Vocab(first_lan, first, second_lan, second)])
 
     def clear_input(self):
         if not self.input_first_lan_checkbox.isChecked():
@@ -145,15 +144,10 @@ class AddVocabs(QMainWindow):
         self.input_second.clear()
 
     def focus_button(self):
-        if not self.is_button_focus:
-            self.button_save.setStyleSheet("background-color: #99CCFF")
-            self.is_button_focus = True
+        if not self.button_save.is_focused:
+            self.button_save.focus()
         else:
             self.save()
-
-    def remove_focus_button(self):
-        self.button_save.setStyleSheet("background-color: #FFFFFF")
-        self.is_button_focus = False
 
     def key_press(self, event: QKeyEvent):
         self.keyboard.key_press(event)
@@ -167,8 +161,8 @@ class AddVocabs(QMainWindow):
                 break
         # move up
         if event.key() == Qt.Key.Key_Up:
-            if self.is_button_focus:
-                self.remove_focus_button()
+            if self.button_save.is_focused:
+                self.button_save.unfocus()
             elif selected != 0:
                 self.steer_widgets[selected - 1].setFocus()
         # move down
