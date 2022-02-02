@@ -41,12 +41,25 @@ class AddVocabs(QMainWindow):
         self.widget_first_lan.setLayout(self.layout_first_lan)
 
         # first word
-        self.input_first = CustomLineEdit(
+        # präfix
+        self.input_first_layout = QHBoxLayout()
+        self.input_first_präfix = CustomLineEdit(
+            key_release=self.key_release,
+            key_press=self.key_press,
+            placeholder="Präfix",
+            alignment=Qt.AlignmentFlag.AlignCenter
+        )
+        # word
+        self.input_first_vocab = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
             placeholder="First Word",
             alignment=Qt.AlignmentFlag.AlignCenter
         )
+        self.input_first_layout.addWidget(self.input_first_präfix)
+        self.input_first_layout.addWidget(self.input_first_vocab)
+        self.input_first = QWidget()
+        self.input_first.setLayout(self.input_first_layout)
 
         # second lan
         self.input_second_lan_checkbox = QCheckBox()
@@ -56,25 +69,41 @@ class AddVocabs(QMainWindow):
             placeholder="Second Language",
             alignment=Qt.AlignmentFlag.AlignCenter
         )
+        # widget
         self.layout_second_lan = QHBoxLayout()
         self.layout_second_lan.addWidget(self.input_second_lan_checkbox)
         self.layout_second_lan.addWidget(self.input_second_lan)
         self.widget_second_lan = QWidget()
         self.widget_second_lan.setLayout(self.layout_second_lan)
 
-        self.input_second = CustomLineEdit(
+        # second word
+        # präfix
+        self.input_second_layout = QVBoxLayout()
+        self.input_second_präfix = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
             placeholder="Second Word",
             alignment=Qt.AlignmentFlag.AlignCenter
         )
+        # word
+        self.input_second_vocab = CustomLineEdit(
+            key_release=self.key_release,
+            key_press=self.key_press,
+            placeholder="Second Word",
+            alignment=Qt.AlignmentFlag.AlignCenter
+        )
+        # widget
+        self.input_second_layout.addWidget(self.input_second_präfix)
+        self.input_second_layout.addWidget(self.input_second_vocab)
+        self.input_second = QWidget()
+        self.input_second.setLayout(self.input_second_layout)
 
         # list with all widgets that are can be steered
         self.steer_widgets = [
             self.input_first_lan,
-            self.input_first,
+            self.input_first_vocab,
             self.input_second_lan,
-            self.input_second,
+            self.input_second_vocab,
             self.button_save
         ]
 
@@ -84,9 +113,9 @@ class AddVocabs(QMainWindow):
             "if there are alternative words, split they up with a comma"
         ))
         self.layout.addWidget(self.widget_first_lan)
-        self.layout.addWidget(self.input_first)
+        self.layout.addWidget(self.input_first_vocab)
         self.layout.addWidget(self.widget_second_lan)
-        self.layout.addWidget(self.input_second)
+        self.layout.addWidget(self.input_second_vocab)
         self.layout.addWidget(self.button_save)
 
         # widget
@@ -113,9 +142,9 @@ class AddVocabs(QMainWindow):
         self.button_save.unfocus()
         # read all inputs
         first_lan = self.input_first_lan.text()
-        first = self.input_first.text()
+        first = self.input_first_vocab.text()
         second_lan = self.input_second_lan.text()
-        second = self.input_second.text()
+        second = self.input_second_vocab.text()
         if first_lan == "" \
                 or second_lan == "" \
                 or first == "" \
@@ -127,21 +156,30 @@ class AddVocabs(QMainWindow):
         # edit inputs
         for i, word in enumerate(first):
             if word[0] == " ":
-                first = word[1:len(word)]
+                first[i] = word[1:len(word)]
         for i, word in enumerate(second):
             if word[0] == " ":
                 second[i] = word[1:len(word)]
+        first_präfix = self.input_first_präfix.text()
+        second_präfix = self.input_second_präfix.text()
         self.clear_input()
         # save inputs
-        save_vocabs([Vocab(first_lan, first, second_lan, second)])
+        save_vocabs([Vocab(
+            first_lan,
+            first,
+            second_lan,
+            second
+        )])
 
     def clear_input(self):
         if not self.input_first_lan_checkbox.isChecked():
             self.input_first_lan.clear()
-        self.input_first.clear()
+        self.input_first_vocab.clear()
+        self.input_first_präfix.clear()
         if not self.input_second_lan_checkbox.isChecked():
             self.input_second_lan.clear()
-        self.input_second.clear()
+        self.input_second_vocab.clear()
+        self.input_second_präfix.clear()
 
     def focus_button(self):
         if not self.button_save.is_focused:

@@ -67,7 +67,7 @@ class AllVocabs(QMainWindow):
             layout_vocabs.addWidget(CustomLineEdit(
                 key_release=self.edit_vocab,
                 object_name=str(i),
-                text=remove_list(vocab.given),
+                text=vocab.given_str,
                 alignment=Qt.AlignmentFlag.AlignCenter
             ), i, 1)
             layout_vocabs.addWidget(CustomLineEdit(
@@ -79,7 +79,7 @@ class AllVocabs(QMainWindow):
             layout_vocabs.addWidget(CustomLineEdit(
                 key_release=self.edit_vocab,
                 object_name=str(i),
-                text=remove_list(vocab.searched),
+                text=vocab.searched_str,
                 alignment=Qt.AlignmentFlag.AlignCenter
             ), i, 3)
             line_label = QLabel(str(vocab.line))

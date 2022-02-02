@@ -1,7 +1,6 @@
 from lib.Vocabulary import (
     get_random_vocab,
-    get_languages,
-    remove_list
+    get_languages
 )
 from lib.keyboard import Keyboard
 from lib.CustomWidgets import CustomLineEdit
@@ -63,7 +62,7 @@ class Training(QMainWindow):
         self.widget_buttons.setLayout(self.layout_buttons)
 
         # tab
-        self.label_vocab = QLabel(remove_list(self.cur_vocab.given))
+        self.label_vocab = QLabel(self.cur_vocab.given_str)
         self.label_vocab.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.input_translation = CustomLineEdit(
@@ -120,14 +119,14 @@ class Training(QMainWindow):
             language_given=self.language_given,
             language_search=self.language_search
         )
-        self.label_vocab.setText(remove_list(self.cur_vocab.given))
+        self.label_vocab.setText(self.cur_vocab.given_str)
         self.input_translation.setText("")
         self.solution_shown = False
 
     def check_input(self):
         inp = self.input_translation.text()
         if self.is_check:
-            if inp.lower() in self.cur_vocab.searched:
+            if inp.lower() == self.cur_vocab:
                 self.refresh()
                 self.input_translation.setText("")
         else:
@@ -136,12 +135,13 @@ class Training(QMainWindow):
     def show_solution(self):
         self.is_check = False
         self.solution_shown = True
-        self.input_translation.setText(remove_list(self.cur_vocab.searched))
+        self.input_translation.setText(self.cur_vocab.searched_str)
 
     def help(self):
-        ori = self.input_translation.text()
-        if ori in self.cur_vocab.searched:
-            return
+        return
+        # ori = self.input_translation.text()
+        # if ori in self.cur_vocab.searched:
+        #     return
         # self.is_check = False
         # index = 0
         # for search in self.cur_vocab.searched:

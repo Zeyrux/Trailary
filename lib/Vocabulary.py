@@ -1,23 +1,46 @@
 import os
 import random
 
+from lib.CustomWidgets import CustomDialog
+
 from pathlib import Path
 
 DIR_VOCAB = "Vocabs"
 FILE_VOCAB = "vocabs.vocabulary"
 SEPARATOR = "#SEP#"
 ALTERNATIVE = "#ALT#"
+PRÄFIX = "#PRA#"
 
 vocabs: list["Vocab"] = None
+
+
+class VocabPiece:
+    def __init__(
+            self,
+            vocab: str,
+            präfix: str = ""
+    ):
+        self.vocab = vocab
+        self.präfix = präfix
+
+    def __lt__(self, other: "VocabPiece"):
+        if self.vocab == other.vocab:
+            return self.präfix < other.präfix
+        return self.vocab < other.vocab
+
+    def __str__(self):
+        if self.präfix == "":
+            return self.vocab
+        return f"{self.präfix} {self.vocab}"
 
 
 class Vocab:
     def __init__(
             self,
             lan_given: str,
-            given: list[str],
+            given: list[VocabPiece],
             lan_searched: str,
-            searched: list[str],
+            searched: list[VocabPiece],
             line: int = -1
     ):
         self.lan_given = lan_given
@@ -25,6 +48,26 @@ class Vocab:
         self.lan_searched = lan_searched
         self.searched = searched
         self.line = line
+
+        # given in str form
+        self.given_str = ""
+        for piece in given:
+            self.given_str += f"{piece}, "
+        self.given_str = self.given_str[:len(self.given_str)-2]
+        # searched in str form
+        self.searched_str = ""
+        for piece in searched:
+            self.searched_str += f"{piece}, "
+        self.searched_str = self.searched_str[:len(self.searched_str) - 2]
+
+        # given only vocabs
+        self.given_vocabs = []
+        for piece in self.given:
+            self.given_vocabs.append(piece.vocab)
+        # searched only vocabs
+        self.searched_vocabs = []
+        for piece in self.searched:
+            self.searched_vocabs.append(piece.vocab)
 
     def __lt__(self, other: "Vocab"):
         if self.lan_given == other.lan_given:
@@ -37,9 +80,9 @@ class Vocab:
 
     def __str__(self):
         return f"lan_given: {self.lan_given}; " \
-               f"given: {self.given}; " \
+               f"given: {self.given_str}; " \
                f"lan_searched: {self.lan_searched}; " \
-               f"searched: {self.searched}; " \
+               f"searched: {self.searched_str}; " \
                f"line: {self.line}"
 
     def switch_lan(self):
@@ -49,6 +92,13 @@ class Vocab:
         self.searched = self.given
         self.lan_given = help_lan
         self.given = help_vocab
+
+    def __eq__(self, other: str):
+        if other in self.given_str.split(", "):
+            return True
+        if other in self.given_vocabs:
+            return True
+        return False
 
 
 def save_vocabs(vocabs: list[Vocab]):
@@ -62,15 +112,20 @@ def save_vocabs(vocabs: list[Vocab]):
 def get_save_vocab(vocab: Vocab) -> str:
     # vocab given
     result = vocab.lan_given.lower() + SEPARATOR
-    for i in range(len(vocab.given) - 1):
-        result += vocab.given[i].lower() + ALTERNATIVE
-    result += vocab.given[-1].lower()
+    for piece in vocab.given:
+        result += piece.vocab.lower()
+        if piece.präfix != "":
+            result += PRÄFIX + piece.präfix
+        result += ALTERNATIVE
+    result = result[:len(result)-len(ALTERNATIVE)]
 
     # vocab searched
-    result += SEPARATOR + vocab.lan_searched.lower() + SEPARATOR
-    for i in range(len(vocab.searched) - 1):
-        result += vocab.searched[i].lower() + ALTERNATIVE
-    result += vocab.searched[-1].lower()
+    for piece in vocab.searched:
+        result += piece.vocab.lower()
+        if piece.präfix != "":
+            result += PRÄFIX + piece.präfix
+        result += ALTERNATIVE
+    result = result[:len(result)-len(ALTERNATIVE)]
     result += "\n"
     return result
 
@@ -92,17 +147,41 @@ def read_vocab():
             line = f.readline().replace("\n", "")
             if line == "":
                 return vocabs
-            len_given, given, len_searched, searched \
+            lan_given, given, lan_searched, searched \
                 = line.split(SEPARATOR)
+            given = given.split(ALTERNATIVE)
+            given_pieces: list[VocabPiece] = []
+            for element in given:
+                given_pieces.append(input_to_vocab_piece(element))
+
+            searched = searched.split(ALTERNATIVE)
+            searched_pieces: list[VocabPiece] = []
+            for element in searched:
+                searched_pieces.append(input_to_vocab_piece(element))
             vocab = Vocab(
-                len_given,
-                given.split(ALTERNATIVE),
-                len_searched,
-                searched.split(ALTERNATIVE),
+                lan_given,
+                given_pieces,
+                lan_searched,
+                searched_pieces,
                 line_count
             )
+            print(vocab.__str__())
             vocabs.append(vocab)
             line_count += 1
+
+
+def input_to_vocab_piece(element) -> VocabPiece:
+    piece = element.split(PRÄFIX)
+    if len(piece) == 1:
+        return VocabPiece(piece[0])
+    elif len(piece) == 2:
+        return VocabPiece(piece[0], piece[1])
+    else:
+        CustomDialog(
+            title="ERROR",
+            message=f"Error at reading all vocabs!\n"
+                    f"Please restart and check you vocabs!"
+        )
 
 
 def get_random_vocab(language_given="", language_search="") -> Vocab:
