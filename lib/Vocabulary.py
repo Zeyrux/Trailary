@@ -85,6 +85,13 @@ class Vocab:
                f"searched: {self.searched_str}; " \
                f"line: {self.line}"
 
+    def __eq__(self, other: str):
+        if other in self.searched_str.split(", "):
+            return True
+        if other in self.searched_vocabs:
+            return True
+        return False
+
     def switch_lan(self):
         help_lan = self.lan_searched
         help_vocab = self.searched
@@ -92,13 +99,6 @@ class Vocab:
         self.searched = self.given
         self.lan_given = help_lan
         self.given = help_vocab
-
-    def __eq__(self, other: str):
-        if other in self.given_str.split(", "):
-            return True
-        if other in self.given_vocabs:
-            return True
-        return False
 
 
 def save_vocabs(vocabs: list[Vocab]):
@@ -110,20 +110,26 @@ def save_vocabs(vocabs: list[Vocab]):
 
 
 def get_save_vocab(vocab: Vocab) -> str:
-    # vocab given
+    # lan given
     result = vocab.lan_given.lower() + SEPARATOR
+
+    # vocab given
     for piece in vocab.given:
         result += piece.vocab.lower()
         if piece.präfix != "":
-            result += PRÄFIX + piece.präfix
+            result += PRÄFIX + piece.präfix.lower()
         result += ALTERNATIVE
     result = result[:len(result)-len(ALTERNATIVE)]
+    result += SEPARATOR
+
+    # lan searched
+    result += vocab.lan_searched.lower() + SEPARATOR
 
     # vocab searched
     for piece in vocab.searched:
         result += piece.vocab.lower()
         if piece.präfix != "":
-            result += PRÄFIX + piece.präfix
+            result += PRÄFIX + piece.präfix.lower()
         result += ALTERNATIVE
     result = result[:len(result)-len(ALTERNATIVE)]
     result += "\n"
@@ -231,8 +237,6 @@ def copy_vocab(vocab: Vocab) -> Vocab:
         vocab.line
     )
 
-def remove_list():
-    pass
 
 def binary_list_to_string(binar_l: list) -> list[str]:
     for i, element in enumerate(binar_l):

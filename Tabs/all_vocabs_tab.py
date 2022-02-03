@@ -1,7 +1,6 @@
 import Tabs
 import lib
 from lib.Vocabulary import (
-    remove_list,
     Vocab,
     edit_vocab,
     delete_vocab,
