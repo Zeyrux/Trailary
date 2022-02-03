@@ -104,9 +104,9 @@ class Vocab:
 def save_vocabs(vocabs: list[Vocab]):
     if not os.path.isdir(DIR_VOCAB):
         Path(DIR_VOCAB).mkdir(parents=True, exist_ok=True)
-    with open(os.path.join(DIR_VOCAB, FILE_VOCAB), "a") as f:
+    with open(os.path.join(DIR_VOCAB, FILE_VOCAB), "ab") as f:
         for vocab in vocabs:
-            f.write(get_save_vocab(vocab))
+            f.write(get_save_vocab(vocab).encode())
 
 
 def get_save_vocab(vocab: Vocab) -> str:
@@ -131,20 +131,23 @@ def get_save_vocab(vocab: Vocab) -> str:
 
 
 def edit_vocab(vocab: Vocab):
-    lines = open(os.path.join(DIR_VOCAB, FILE_VOCAB), "r").readlines()
+    lines = binary_list_to_string(
+        open(os.path.join(DIR_VOCAB, FILE_VOCAB), "rb").readlines()
+    )
     lines[vocab.line] = get_save_vocab(vocab)
-    with open(os.path.join(DIR_VOCAB, FILE_VOCAB), "w") as f:
-        f.writelines(lines)
+    with open(os.path.join(DIR_VOCAB, FILE_VOCAB), "wb") as f:
+        f.writelines(string_list_to_binary(lines))
 
 
 def read_vocab():
     vocabs = []
     if not os.path.isfile(os.path.join(DIR_VOCAB, FILE_VOCAB)):
         return
-    with open(os.path.join(DIR_VOCAB, FILE_VOCAB), "r") as f:
+    with open(os.path.join(DIR_VOCAB, FILE_VOCAB), "rb") as f:
         line_count = 0
         while True:
-            line = f.readline().replace("\n", "")
+            line = f.readline().decode()
+            line = line.replace("\n", "")
             if line == "":
                 return vocabs
             lan_given, given, lan_searched, searched \
@@ -209,15 +212,14 @@ def get_languages() -> list[str]:
     return languages
 
 
-def remove_list(list: list) -> str:
-    final_string = ""
-    for i, string in enumerate(list):
-        string = string.replace("[", "")
-        string = string.replace("]", "")
-        string = string.replace("\"", "")
-        string = string.replace("'", "")
-        final_string += f"{string}, " if len(list) != i + 1 else string
-    return final_string
+def split_comma(string: str) -> str:
+    if string == "":
+        return string
+    string = string.split(",")
+    for i, word in enumerate(string):
+        if word[0] == " ":
+            string[i] = word[1:len(word)]
+    return string
 
 
 def copy_vocab(vocab: Vocab) -> Vocab:
@@ -229,6 +231,20 @@ def copy_vocab(vocab: Vocab) -> Vocab:
         vocab.line
     )
 
+def remove_list():
+    pass
+
+def binary_list_to_string(binar_l: list) -> list[str]:
+    for i, element in enumerate(binar_l):
+        binar_l[i] = element.decode()
+    return binar_l
+
+
+def string_list_to_binary(string_l: list) -> list:
+    for i, element in enumerate(string_l):
+        string_l[i] = element.encode()
+    return string_l
+
 
 def reload():
     global vocabs
@@ -237,9 +253,13 @@ def reload():
 
 
 def delete_vocab(line):
-    lines = open(os.path.join(DIR_VOCAB, FILE_VOCAB), "r").readlines()
+    lines = binary_list_to_string(
+        open(os.path.join(DIR_VOCAB, FILE_VOCAB), "rb").readlines()
+    )
     del lines[line]
-    open(os.path.join(DIR_VOCAB, FILE_VOCAB), "w").writelines(lines)
+    open(os.path.join(DIR_VOCAB, FILE_VOCAB), "wb").writelines(
+        string_list_to_binary(lines)
+    )
 
 
 reload()

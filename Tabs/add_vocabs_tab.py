@@ -1,4 +1,4 @@
-from lib.Vocabulary import Vocab, save_vocabs
+from lib.Vocabulary import Vocab, VocabPiece, save_vocabs, split_comma
 from lib.CustomWidgets import CustomLineEdit, CustomPushButton, CustomDialog
 from lib.Style import Style
 from lib.keyboard import Keyboard
@@ -78,11 +78,11 @@ class AddVocabs(QMainWindow):
 
         # second word
         # präfix
-        self.input_second_layout = QVBoxLayout()
+        self.input_second_layout = QHBoxLayout()
         self.input_second_präfix = CustomLineEdit(
             key_release=self.key_release,
             key_press=self.key_press,
-            placeholder="Second Word",
+            placeholder="Second Präfix",
             alignment=Qt.AlignmentFlag.AlignCenter
         )
         # word
@@ -113,9 +113,9 @@ class AddVocabs(QMainWindow):
             "if there are alternative words, split they up with a comma"
         ))
         self.layout.addWidget(self.widget_first_lan)
-        self.layout.addWidget(self.input_first_vocab)
+        self.layout.addWidget(self.input_first)
         self.layout.addWidget(self.widget_second_lan)
-        self.layout.addWidget(self.input_second_vocab)
+        self.layout.addWidget(self.input_second)
         self.layout.addWidget(self.button_save)
 
         # widget
@@ -151,24 +151,25 @@ class AddVocabs(QMainWindow):
                 or second == "":
             CustomDialog(message="Please fill every input field!")
             return
-        first = first.split(",")
-        second = second.split(",")
+        first_präfix = split_comma(self.input_first_präfix.text())
+        first = split_comma(first)
+        second_präfix = split_comma(self.input_second_präfix.text())
+        second = split_comma(second)
         # edit inputs
-        for i, word in enumerate(first):
-            if word[0] == " ":
-                first[i] = word[1:len(word)]
-        for i, word in enumerate(second):
-            if word[0] == " ":
-                second[i] = word[1:len(word)]
-        first_präfix = self.input_first_präfix.text()
-        second_präfix = self.input_second_präfix.text()
+        first_pieces = []
+        for präfix, word in zip(first_präfix, first):
+            first_pieces.append(VocabPiece(word, präfix=präfix))
+        second_pieces = []
+        for präfix, word in zip(second_präfix, second):
+            second_pieces.append(VocabPiece(word, präfix=präfix))
+
         self.clear_input()
         # save inputs
         save_vocabs([Vocab(
             first_lan,
-            first,
+            first_pieces,
             second_lan,
-            second
+            second_pieces
         )])
 
     def clear_input(self):
