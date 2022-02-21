@@ -6,8 +6,10 @@ from PyQt6.QtWidgets import (
     QLabel,
     QPushButton,
     QVBoxLayout,
-    QScrollArea
+    QScrollArea,
+    QBoxLayout
 )
+import Tabs
 
 
 def empty(_):
@@ -44,7 +46,9 @@ class CustomLineEdit(QLineEdit):
 
 
 class CustomDialog(QDialog):
-    def __init__(self, title="INFO", message=""):
+    def __init__(self, title="INFO", message="", ignore_settings=False):
+        if Tabs.settings_tab.show_dialogs and not ignore_settings:
+            return
         super().__init__()
         self.setWindowTitle(title)
 
@@ -95,3 +99,8 @@ class CustomPushButton(QPushButton):
             self.unfocus()
         else:
             self.focus()
+
+
+class SteerGrid:
+    def __init__(self, grid: QBoxLayout):
+        pass

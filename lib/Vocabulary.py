@@ -21,7 +21,7 @@ class VocabPiece:
             präfix: str = ""
     ):
         self.vocab = vocab
-        self.präfix = präfix
+        self.präfix = "" if präfix is None else präfix
 
     def __lt__(self, other: "VocabPiece"):
         if self.vocab == other.vocab:
@@ -174,7 +174,6 @@ def read_vocab():
                 searched_pieces,
                 line_count
             )
-            print(vocab.__str__())
             vocabs.append(vocab)
             line_count += 1
 

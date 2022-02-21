@@ -2,9 +2,11 @@ import Tabs
 import lib
 from lib.Vocabulary import (
     Vocab,
+    VocabPiece,
     edit_vocab,
     delete_vocab,
-    reload
+    reload,
+    split_comma
 )
 from lib.CustomWidgets import CustomLineEdit, CustomDialog, CustomScrollArea
 from lib.Style import Style
@@ -103,27 +105,45 @@ class AllVocabs(QMainWindow):
                         QWidget, child.objectName()
                     )
                     break
+            given_pieces = []
+            given = split_comma(vocab_widgets[1].text())
+            for piece in given:
+                pieces = piece.split(" ")
+                präfix = ""
+                for i in range(len(pieces) - 1):
+                    präfix += pieces[i] + " "
+                präfix = präfix[:len(präfix)-1]
+                given_pieces.append(VocabPiece(pieces[-1], präfix=präfix))
+
+            searched_pieces = []
+            searched = split_comma(vocab_widgets[3].text())
+            for piece in searched:
+                pieces = piece.split(" ")
+                präfix = ""
+                for i in range(len(pieces) - 1):
+                    präfix += pieces[i] + " "
+                präfix = präfix[:len(präfix) - 1]
+                searched_pieces.append(VocabPiece(pieces[-1], präfix=präfix))
+
             vocab = Vocab(
                 vocab_widgets[0].text(),
-                vocab_widgets[1].text().split(", "),
+                given_pieces,
                 vocab_widgets[2].text(),
-                vocab_widgets[3].text().split(", "),
+                searched_pieces,
                 int(vocab_widgets[4].text())
             )
             edit_vocab(vocab)
-            if Tabs.settings_tab.show_dialogs:
-                CustomDialog(message="Vocab changed")
+            CustomDialog(message="Vocab changed")
 
     def delete_vocab(self, event: QKeyEvent):
         if event.key() == Qt.Key.Key_Return:
             try:
                 line = int(self.line_edit_delete.text())
                 delete_vocab(line)
-                print(Tabs.settings_tab.show_dialogs)
-                if Tabs.settings_tab.show_dialogs:
-                    CustomDialog(message="Deleted line")
+                CustomDialog(message="Deleted line")
             except ValueError:
                 CustomDialog(
                     title="Warning",
-                    message="Please enter the line number"
+                    message="Please enter the line number",
+                    ignore_settings=True
                 )

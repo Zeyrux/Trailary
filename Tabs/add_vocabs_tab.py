@@ -12,6 +12,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QCheckBox
 )
+import itertools
 
 
 class AddVocabs(QMainWindow):
@@ -157,10 +158,10 @@ class AddVocabs(QMainWindow):
         second = split_comma(second)
         # edit inputs
         first_pieces = []
-        for präfix, word in zip(first_präfix, first):
+        for präfix, word in itertools.zip_longest(first_präfix, first):
             first_pieces.append(VocabPiece(word, präfix=präfix))
         second_pieces = []
-        for präfix, word in zip(second_präfix, second):
+        for präfix, word in itertools.zip_longest(second_präfix, second):
             second_pieces.append(VocabPiece(word, präfix=präfix))
 
         self.clear_input()
