@@ -22,7 +22,7 @@ from PyQt6.QtWidgets import (
 )
 
 
-class AllVocabs(QMainWindow):
+class AllVocabsTab(QMainWindow):
     def __init__(self, style=Style([])):
         super().__init__()
 

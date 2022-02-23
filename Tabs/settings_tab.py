@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import (
 show_dialogs = True
 
 
-class Settings(QMainWindow):
+class SettingsTab(QMainWindow):
     def __init__(self, style=Style([])):
         super().__init__()
         self.button_dialogs = QPushButton("Dialogs: On")

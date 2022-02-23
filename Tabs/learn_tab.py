@@ -16,15 +16,15 @@ from PyQt6.QtWidgets import (
 )
 
 
-def get_tabs(style: Style) -> list["Training"]:
+def get_tabs(style: Style) -> list["TrainingTab"]:
     languages = get_languages()
     tabs = []
     for language_sub in languages:
-        tabs.append(Training(language_sub[0], language_sub[1], style=style))
+        tabs.append(TrainingTab(language_sub[0], language_sub[1], style=style))
     return tabs
 
 
-class Training(QMainWindow):
+class TrainingTab(QMainWindow):
     is_check = True
     solution_shown = False
 

@@ -106,12 +106,22 @@ class Vocab:
         # vocab list
         help_vocab_list = self.searched_vocabs
         self.searched_vocabs = self.given_vocabs
-        self.given_vocabs = help_vocab
+        self.given_vocabs = help_vocab_list
 
         # vocab str
         help_vocab_str = self.searched_str
-        self.given_str = self.searched_str
-        self.searched_str = help_vocab_str
+        self.searched_str = self.given_str
+        self.given_str = help_vocab_str
+
+
+class VocabBook:
+    def __init__(self, date: str, vocabs=None):
+        self.date = date
+        self.vocabs = [] if vocabs is None else vocabs
+
+    def __str__(self):
+        return f"date: {self.date}; " \
+               f"len: {len(self.vocabs)}"
 
 
 def save_vocabs(vocabs: list[Vocab]):

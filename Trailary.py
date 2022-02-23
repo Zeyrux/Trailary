@@ -2,9 +2,10 @@ import sys
 import ctypes
 
 from Tabs.learn_tab import get_tabs
-from Tabs.add_vocabs_tab import AddVocabs
-from Tabs.all_vocabs_tab import AllVocabs
-from Tabs.settings_tab import Settings
+from Tabs.add_vocabs_tab import AddVocabsTab
+from Tabs.all_vocabs_tab import AllVocabsTab
+from Tabs.settings_tab import SettingsTab
+from lib.Settings import Settings, Setting
 from lib.Style import Style
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeyEvent
@@ -29,8 +30,6 @@ SCREEN_HEIGHT = ctypes.windll.user32.GetSystemMetrics(1)
 
 
 class MainWindow(QMainWindow):
-    is_fullscreen = False
-
     def __init__(self):
         super().__init__()
 
@@ -69,6 +68,9 @@ class MainWindow(QMainWindow):
             STYLE_Q_BUTTON_PUSH
         ])
 
+        # settings
+        self.settings = Settings("Vocabs\\settings.settings")
+
         # tabs
         self.tabs = QTabWidget()
         self.tabs.setTabPosition(QTabWidget.TabPosition.North)
@@ -84,24 +86,20 @@ class MainWindow(QMainWindow):
                 f"{tab.language_search[0].upper() + tab.language_search[1:]}"
             )
 
-        self.tabs.addTab(AddVocabs(add_vocabs_style), "Add vocabs")
-        self.tabs.addTab(AllVocabs(all_vocabs_style), "All vocabs")
-        self.tabs.addTab(Settings(settings_style), "Settings")
+        self.tabs.addTab(AddVocabsTab(add_vocabs_style), "Add vocabs")
+        self.tabs.addTab(AllVocabsTab(all_vocabs_style), "All vocabs")
+        self.tabs.addTab(SettingsTab(settings_style), "Settings")
 
         self.setStyleSheet(STYLE_WINDOW)
         self.setCentralWidget(self.tabs)
 
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
+        # toggle fullscreen
         if event.key() == Qt.Key.Key_F11:
-            self.toggle_fullscreen()
-
-    def toggle_fullscreen(self):
-        if self.is_fullscreen:
-            self.showNormal()
-            self.is_fullscreen = False
-        else:
-            self.showFullScreen()
-            self.is_fullscreen = True
+            if self.isFullScreen():
+                self.showNormal()
+            else:
+                self.showFullScreen()
 
 
 app = QApplication(sys.argv)

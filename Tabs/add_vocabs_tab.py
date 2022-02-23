@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
 import itertools
 
 
-class AddVocabs(QMainWindow):
+class AddVocabsTab(QMainWindow):
 
     def __init__(self, style=Style([])):
         super().__init__()
