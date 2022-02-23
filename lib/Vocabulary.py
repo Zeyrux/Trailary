@@ -53,7 +53,7 @@ class Vocab:
         self.given_str = ""
         for piece in given:
             self.given_str += f"{piece}, "
-        self.given_str = self.given_str[:len(self.given_str)-2]
+        self.given_str = self.given_str[:len(self.given_str) - 2]
         # searched in str form
         self.searched_str = ""
         for piece in searched:
@@ -93,12 +93,25 @@ class Vocab:
         return False
 
     def switch_lan(self):
+        # language
         help_lan = self.lan_searched
-        help_vocab = self.searched
         self.lan_searched = self.lan_given
-        self.searched = self.given
         self.lan_given = help_lan
+
+        # vocab
+        help_vocab = self.searched
+        self.searched = self.given
         self.given = help_vocab
+
+        # vocab list
+        help_vocab_list = self.searched_vocabs
+        self.searched_vocabs = self.given_vocabs
+        self.given_vocabs = help_vocab
+
+        # vocab str
+        help_vocab_str = self.searched_str
+        self.given_str = self.searched_str
+        self.searched_str = help_vocab_str
 
 
 def save_vocabs(vocabs: list[Vocab]):
@@ -119,7 +132,7 @@ def get_save_vocab(vocab: Vocab) -> str:
         if piece.präfix != "":
             result += PRÄFIX + piece.präfix.lower()
         result += ALTERNATIVE
-    result = result[:len(result)-len(ALTERNATIVE)]
+    result = result[:len(result) - len(ALTERNATIVE)]
     result += SEPARATOR
 
     # lan searched
@@ -131,7 +144,7 @@ def get_save_vocab(vocab: Vocab) -> str:
         if piece.präfix != "":
             result += PRÄFIX + piece.präfix.lower()
         result += ALTERNATIVE
-    result = result[:len(result)-len(ALTERNATIVE)]
+    result = result[:len(result) - len(ALTERNATIVE)]
     result += "\n"
     return result
 
@@ -198,23 +211,30 @@ def get_random_vocab(language_given="", language_search="") -> Vocab:
     while True:
         vocab = copy_vocab(vocabs[random.randint(0, len(vocabs) - 1)])
         if language_given == vocab.lan_given \
-                or vocab.lan_searched \
-                and language_search == vocab.lan_given \
-                or vocab.lan_searched:
-            if language_given != vocab.lan_given:
-                vocab.switch_lan()
+                and language_search == vocab.lan_searched:
+            break
+        if language_given == vocab.lan_searched \
+                and language_search == vocab.lan_given:
+            vocab.switch_lan()
             break
     return vocab
 
 
-def get_languages() -> list[str]:
+def get_languages() -> list[tuple]:
     languages = []
     for vocab in vocabs:
-        if vocab.lan_given not in languages:
-            languages.append(vocab.lan_given)
-        if vocab.lan_searched not in languages:
-            languages.append(vocab.lan_searched)
+        if not is_str_in_2d_list(languages, vocab.lan_given) \
+                or not is_str_in_2d_list(languages, vocab.lan_searched):
+            languages.append((vocab.lan_given, vocab.lan_searched))
+            languages.append((vocab.lan_searched, vocab.lan_given))
     return languages
+
+
+def is_str_in_2d_list(list: list, string_searched: str):
+    for sub_list in list:
+        if string_searched in sub_list:
+            return True
+    return False
 
 
 def split_comma(string: str) -> str:

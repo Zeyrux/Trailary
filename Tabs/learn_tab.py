@@ -19,10 +19,8 @@ from PyQt6.QtWidgets import (
 def get_tabs(style: Style) -> list["Training"]:
     languages = get_languages()
     tabs = []
-    for i, language_given in enumerate(languages):
-        for j in range(i + 1, len(languages)):
-            tabs.append(Training(language_given, languages[j], style=style))
-            tabs.append(Training(languages[j], language_given, style=style))
+    for language_sub in languages:
+        tabs.append(Training(language_sub[0], language_sub[1], style=style))
     return tabs
 
 
