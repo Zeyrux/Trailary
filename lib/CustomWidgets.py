@@ -47,7 +47,7 @@ class CustomLineEdit(QLineEdit):
 
 class CustomDialog(QDialog):
     def __init__(self, title="INFO", message="", ignore_settings=False):
-        if Tabs.settings_tab.show_dialogs and not ignore_settings:
+        if not Tabs.settings_tab.show_dialogs and not ignore_settings:
             return
         super().__init__()
         self.setWindowTitle(title)

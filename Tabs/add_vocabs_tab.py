@@ -102,8 +102,10 @@ class AddVocabs(QMainWindow):
         # list with all widgets that are can be steered
         self.steer_widgets = [
             self.input_first_lan,
+            self.input_first_präfix,
             self.input_first_vocab,
             self.input_second_lan,
+            self.input_second_präfix,
             self.input_second_vocab,
             self.button_save
         ]
@@ -200,19 +202,21 @@ class AddVocabs(QMainWindow):
                 selected = i
                 break
         # move up
-        if event.key() == Qt.Key.Key_Up:
+        if event.key() == Qt.Key.Key_Up \
+                or event.key() == Qt.Key.Key_Left:
             if self.button_save.is_focused:
                 self.button_save.unfocus()
             elif selected != 0:
                 self.steer_widgets[selected - 1].setFocus()
         # move down
         if event.key() == Qt.Key.Key_Down \
+                or event.key() == Qt.Key.Key_Right \
                 or event.key() == Qt.Key.Key_Return:
             if selected == len(self.steer_widgets) - 2:
                 self.focus_button()
             else:
                 self.steer_widgets[selected + 1].setFocus()
-        # shortcuts
+        # save vocab at Strg + S
         if event.key() == Qt.Key.Key_S \
                 and self.keyboard.key(Qt.Key.Key_Control):
             self.button_save.click()
