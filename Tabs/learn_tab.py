@@ -81,7 +81,7 @@ class TrainingTab(QMainWindow):
         self.widget.setObjectName("MainWidget")
 
         self.widget.setStyleSheet(style.style)
-        
+
         self.setCentralWidget(self.widget)
 
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
@@ -136,37 +136,44 @@ class TrainingTab(QMainWindow):
         self.input_translation.setText(self.cur_vocab.searched_str)
 
     def help(self):
-        return
-        # ori = self.input_translation.text()
-        # if ori in self.cur_vocab.searched:
-        #     return
-        # self.is_check = False
-        # index = 0
-        # for search in self.cur_vocab.searched:
-        #     for letter_1, letter_2 in zip(ori.lower(), search):
-        #         if letter_1 != letter_2:
-        #             self.input_translation.setText(
-        #                 ori[: index] + letter_2 + ori[index + 1:]
-        #             )
-        #             return
-        #         index += 1
-        # self.input_translation.setText(
-        #     ori + self.cur_vocab.searched[len(ori)]
-        # )
+        self.is_check = False
+        best_equality = 0
+        inp_word = self.input_translation.text()
 
-        # vocab = self.cur_vocab.searched.lower()
-        # ori = self.input_translation.text()
-        # new_text = ""
-        # index = 0
-        # for letter_vocab, letter_input in zip(vocab, input_help):
-        #     if letter_vocab != letter_input:
-        #         self.is_check = False
-        #         new_text = ori[: index] + letter_vocab + ori[index + 1:]
-        #         self.input_translation.setText(new_text)
-        #         return
-        #     index += 1
-        # if new_text == "":
-        #     self.is_check = False
-        #     self.input_translation.setText(
-        #         ori + self.cur_vocab.searched[len(ori)]
-        #     )
+        # get word that´s probably typed in
+        if len(self.cur_vocab.searched) != 1:
+            equalities = []
+            for given in self.cur_vocab.searched:
+                characters_dict = {}
+                for char in given:
+                    characters_dict[char] = characters_dict.get(char, 0) + 1
+                equality = 0
+                for key, cnt in characters_dict.items():
+                    equality += abs(cnt - inp_word.count(key))
+                equalities.append(equality)
+            best_equality = equalities.index(min(equalities))
+
+        # correct word
+        right_word = self.cur_vocab.searched[best_equality].vocab
+        for i, char in enumerate(inp_word):
+            if char != right_word[i]:
+                if i < len(inp_word) - 1:
+                    if inp_word[i + 1] \
+                            == right_word[i + 1]:
+                        self.input_translation.setText(
+                            inp_word[:i]
+                            + right_word[i]
+                            + inp_word[i:]
+                        )
+                        return
+                self.input_translation.setText(
+                    inp_word[:i]
+                    + right_word[i]
+                    + inp_word[i + 1:]
+                )
+                return
+
+        # if sub-word was correct, but in end pieces missing
+        self.input_translation.setText(right_word[:len(inp_word) + 1])
+        if right_word == self.input_translation.text():
+            self.solution_shown = True

@@ -22,6 +22,7 @@ STYLE_Q_BUTTON_PUSH = open("styles\\QPushButton.css", "r").read()
 STYLE_Q_LABEL = open("styles\\QLabel.css", "r").read()
 STYLE_Q_SCROLL_AREA = open("styles\\QScrollArea.css", "r").read()
 STYLE_Q_GRID_LAYOUT = open("styles\\QGridLayout.css", "r").read()
+STYLE_Q_CHECK_BOX = open("styles\\QCheckBox.css", "r").read()
 
 STYLE_WINDOW = open("styles\\TrailaryMain.css", "r").read()
 STYLE_APP = "Fusion"
@@ -50,7 +51,8 @@ class MainWindow(QMainWindow):
             STYLE_MAIN_WIDGET,
             STYLE_CUSTOM_LINE_EDIT,
             STYLE_Q_BUTTON_PUSH,
-            STYLE_Q_LABEL
+            STYLE_Q_LABEL,
+            STYLE_Q_CHECK_BOX
         ])
         # all vocabs
         all_vocabs_style = Style([

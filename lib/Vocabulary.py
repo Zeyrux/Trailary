@@ -60,15 +60,6 @@ class Vocab:
             self.searched_str += f"{piece}, "
         self.searched_str = self.searched_str[:len(self.searched_str) - 2]
 
-        # given only vocabs
-        self.given_vocabs = []
-        for piece in self.given:
-            self.given_vocabs.append(piece.vocab)
-        # searched only vocabs
-        self.searched_vocabs = []
-        for piece in self.searched:
-            self.searched_vocabs.append(piece.vocab)
-
     def __lt__(self, other: "Vocab"):
         if self.lan_given == other.lan_given:
             if self.lan_searched == other.lan_searched:
@@ -88,7 +79,7 @@ class Vocab:
     def __eq__(self, other: str):
         if other in self.searched_str.split(", "):
             return True
-        if other in self.searched_vocabs:
+        if other in self.searched:
             return True
         return False
 
@@ -102,11 +93,6 @@ class Vocab:
         help_vocab = self.searched
         self.searched = self.given
         self.given = help_vocab
-
-        # vocab list
-        help_vocab_list = self.searched_vocabs
-        self.searched_vocabs = self.given_vocabs
-        self.given_vocabs = help_vocab_list
 
         # vocab str
         help_vocab_str = self.searched_str
