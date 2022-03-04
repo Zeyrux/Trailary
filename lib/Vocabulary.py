@@ -77,10 +77,12 @@ class Vocab:
                f"line: {self.line}"
 
     def __eq__(self, other: str):
+        print(self.searched)
         if other in self.searched_str.split(", "):
             return True
-        if other in self.searched:
-            return True
+        for search in self.searched:
+            if other == search.vocab:
+                return True
         return False
 
     def switch_lan(self):
